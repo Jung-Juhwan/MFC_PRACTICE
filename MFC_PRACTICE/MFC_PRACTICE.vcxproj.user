@@ -3,4 +3,8 @@
   <PropertyGroup>
     <RESOURCE_FILE>MFCPRACTICE.rc</RESOURCE_FILE>
   </PropertyGroup>
+  <PropertyGroup Condition="'$(Configuration)|$(Platform)'=='Debug|x64'">
+    <LocalDebuggerEnvironment>C:\Program Files\Common Files\System\ado\</LocalDebuggerEnvironment>
+    <DebuggerFlavor>WindowsLocalDebugger</DebuggerFlavor>
+  </PropertyGroup>
 </Project>

@@ -1,45 +1,47 @@
 #include "pch.h"
 #include "Database.h"
 
-HRESULT hr;
 
 Database::Database()
 {
 	m_Con = NULL;
 }
 
-Database::~Database()
-{
-	try
-	{
-		// 아직 연결이 끊기지 않았다면 연결을 끊는다.
-		if (m_Con)
-		{
-			m_Con->Close();
-			m_Con = NULL;
-		}
-	}
-	catch (_com_error& e)
-	{
-		// 오류 처리
-	}
-}
 
-bool Database::Open(char* UserName, char* Pwd, char* CnnPtr, char* ErrStr)
+
+//bool Database::Open(char* UserName, char* Pwd, char* CnnPtr, char* ErrStr)
+//{
+//	try
+//	{
+//		
+//		//if (m_Con == NULL)
+//		//	return 0;	
+//		hr = m_Con.CreateInstance(__uuidof(ADODB::Connection));
+//		m_Con->Open(CnnPtr, UserName, Pwd, NULL);
+//	}
+//	catch (_com_error& e)
+//	{
+//		// 오류 처리
+//		return 0;
+//	}
+//	return 1;
+//}
+
+BOOL Database::Open(LPCTSTR lpszUserName, LPCTSTR lpszPassword, LPCTSTR lpszServiceName,CString& strError)
+
 {
 	try
 	{
-		if (m_Con == NULL)
-			return 0;
-		hr = m_Con.CreateInstance(__uuidof(ADODB::Connection));
-		m_Con->Open(CnnPtr, UserName, Pwd, NULL);
+		CString lpszConnText = ("Provider = OraOLEDB.Oracle.1; PLSQLRSet = 1; Data Source = % s; User ID = % s; Password = % s", lpszServiceName, lpszUserName, lpszPassword);
+		m_Con.CreateInstance(__uuidof(ADODB::Connection));
+		m_Con->Open(_bstr_t(lpszConnText), _T(""), _T(""), ADODB::adConnectUnspecified);
 	}
 	catch (_com_error& e)
-	{
-		// 오류 처리
-		return 0;
+	{		
+		return FALSE;
 	}
-	return 1;
+
+	return TRUE;
 }
 
 RecPtr Database::Execute(char* CmdStr)
@@ -76,4 +78,21 @@ bool Database::Close()
 		return 0;
 	}
 	return hr == S_OK;
+}
+
+Database::~Database()
+{
+	try
+	{
+		// 아직 연결이 끊기지 않았다면 연결을 끊는다.
+		if (m_Con)
+		{
+			m_Con->Close();
+			m_Con = NULL;
+		}
+	}
+	catch (_com_error& e)
+	{
+		// 오류 처리
+	}
 }

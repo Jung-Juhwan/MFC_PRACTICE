@@ -1,10 +1,6 @@
-﻿  pch.cpp
-  Database.cpp
+﻿  Database.cpp
 C:\Users\IPK-JHCHAE\Documents\GitHub\MFC_PRACTICE\MFC_PRACTICE\Database.cpp(22,21): warning C4101: 'e' :참조되지 않은 지역 변수입니다.
-C:\Users\IPK-JHCHAE\Documents\GitHub\MFC_PRACTICE\MFC_PRACTICE\Database.cpp(37,21): warning C4101: 'e' :참조되지 않은 지역 변수입니다.
-C:\Users\IPK-JHCHAE\Documents\GitHub\MFC_PRACTICE\MFC_PRACTICE\Database.cpp(53,21): warning C4101: 'e' :참조되지 않은 지역 변수입니다.
-C:\Users\IPK-JHCHAE\Documents\GitHub\MFC_PRACTICE\MFC_PRACTICE\Database.cpp(73,21): warning C4101: 'e' :참조되지 않은 지역 변수입니다.
-  MFC_PRACTICE.cpp
-  MFC_PRACTICEDlg.cpp
-  코드를 생성하고 있습니다...
+C:\Users\IPK-JHCHAE\Documents\GitHub\MFC_PRACTICE\MFC_PRACTICE\Database.cpp(38,21): warning C4101: 'e' :참조되지 않은 지역 변수입니다.
+C:\Users\IPK-JHCHAE\Documents\GitHub\MFC_PRACTICE\MFC_PRACTICE\Database.cpp(58,21): warning C4101: 'e' :참조되지 않은 지역 변수입니다.
+C:\Users\IPK-JHCHAE\Documents\GitHub\MFC_PRACTICE\MFC_PRACTICE\Database.cpp(77,21): warning C4101: 'e' :참조되지 않은 지역 변수입니다.
   MFC_PRACTICE.vcxproj -> C:\Users\IPK-JHCHAE\Documents\GitHub\MFC_PRACTICE\Debug\MFC_PRACTICE.exe

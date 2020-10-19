@@ -20,9 +20,11 @@ public:
 	protected:
 	virtual void DoDataExchange(CDataExchange* pDX);	// DDX/DDV 지원입니다.
 
+	Database DB;
 	void GetData(CString& a, CString& b);
 	CString m_id;
 	CString m_pwd;
+	CString provider;
 
 
 // 구현입니다.
