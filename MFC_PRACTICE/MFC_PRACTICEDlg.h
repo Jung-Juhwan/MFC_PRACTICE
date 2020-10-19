@@ -20,9 +20,10 @@ public:
 	protected:
 	virtual void DoDataExchange(CDataExchange* pDX);	// DDX/DDV 지원입니다.
 
-	TEST m_a;
+	void GetData(CString& a, CString& b);
+	CString m_id;
+	CString m_pwd;
 
-	void getOrder();
 
 // 구현입니다.
 protected:
@@ -35,5 +36,7 @@ protected:
 	afx_msg HCURSOR OnQueryDragIcon();
 	DECLARE_MESSAGE_MAP()
 public:
-	afx_msg void OnBnClickedTest();
+	afx_msg void OnEnChangeId();
+	afx_msg void OnEnChangePwd();
+	afx_msg void OnBnClickedConnection();
 };

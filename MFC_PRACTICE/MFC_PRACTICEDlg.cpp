@@ -61,11 +61,20 @@ void CMFCPRACTICEDlg::DoDataExchange(CDataExchange* pDX)
 	CDialogEx::DoDataExchange(pDX);
 }
 
+void CMFCPRACTICEDlg::GetData(CString& a,CString& b)
+{
+	a = m_id;
+	b = m_pwd;
+}
+
+
 BEGIN_MESSAGE_MAP(CMFCPRACTICEDlg, CDialogEx)
 	ON_WM_SYSCOMMAND()
 	ON_WM_PAINT()
 	ON_WM_QUERYDRAGICON()
-	ON_BN_CLICKED(IDC_TEST, &CMFCPRACTICEDlg::OnBnClickedTest)
+	ON_EN_CHANGE(IDC_ID, &CMFCPRACTICEDlg::OnEnChangeId)
+	ON_EN_CHANGE(IDC_PWD, &CMFCPRACTICEDlg::OnEnChangePwd)
+	ON_BN_CLICKED(IDC_CONNECTION, &CMFCPRACTICEDlg::OnBnClickedConnection)
 END_MESSAGE_MAP()
 
 
@@ -155,13 +164,33 @@ HCURSOR CMFCPRACTICEDlg::OnQueryDragIcon()
 }
 
 
-void CMFCPRACTICEDlg::OnBnClickedTest()
+void CMFCPRACTICEDlg::OnEnChangeId()
+{
+	// TODO:  RICHEDIT 컨트롤인 경우, 이 컨트롤은
+	// CDialogEx::OnInitDialog() 함수를 재지정 
+	//하고 마스크에 OR 연산하여 설정된 ENM_CHANGE 플래그를 지정하여 CRichEditCtrl().SetEventMask()를 호출하지 않으면
+	// 이 알림 메시지를 보내지 않습니다.
+
+	// TODO:  여기에 컨트롤 알림 처리기 코드를 추가합니다.
+}
+
+
+void CMFCPRACTICEDlg::OnEnChangePwd()
+{
+	// TODO:  RICHEDIT 컨트롤인 경우, 이 컨트롤은
+	// CDialogEx::OnInitDialog() 함수를 재지정 
+	//하고 마스크에 OR 연산하여 설정된 ENM_CHANGE 플래그를 지정하여 CRichEditCtrl().SetEventMask()를 호출하지 않으면
+	// 이 알림 메시지를 보내지 않습니다.
+
+	// TODO:  여기에 컨트롤 알림 처리기 코드를 추가합니다.
+}
+
+
+void CMFCPRACTICEDlg::OnBnClickedConnection()
 {
 	// TODO: 여기에 컨트롤 알림 처리기 코드를 추가합니다.
-	TEST dlg;
-	CString test;
+	GetDlgItemText(IDC_ID, m_id);
+	GetDlgItemText(IDC_PWD, m_pwd);
 
-	if (dlg.DoModal() == IDOK) {
-		dlg.GetData(test);
-	}
+	SetDlgItemText(IDC_LOG, m_id + "/" + m_pwd);
 }
