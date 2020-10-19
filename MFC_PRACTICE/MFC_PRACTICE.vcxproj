@@ -183,6 +183,7 @@
     </ResourceCompile>
   </ItemDefinitionGroup>
   <ItemGroup>
+    <ClInclude Include="Database.h" />
     <ClInclude Include="framework.h" />
     <ClInclude Include="MFC_PRACTICE.h" />
     <ClInclude Include="MFC_PRACTICEDlg.h" />
@@ -191,6 +192,7 @@
     <ClInclude Include="targetver.h" />
   </ItemGroup>
   <ItemGroup>
+    <ClCompile Include="Database.cpp" />
     <ClCompile Include="MFC_PRACTICE.cpp" />
     <ClCompile Include="MFC_PRACTICEDlg.cpp" />
     <ClCompile Include="pch.cpp">
