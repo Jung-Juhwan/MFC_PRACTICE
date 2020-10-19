@@ -39,4 +39,5 @@ public:
 	afx_msg void OnEnChangeId();
 	afx_msg void OnEnChangePwd();
 	afx_msg void OnBnClickedConnection();
+	afx_msg void OnBnClickedOk();
 };

@@ -75,6 +75,7 @@ BEGIN_MESSAGE_MAP(CMFCPRACTICEDlg, CDialogEx)
 	ON_EN_CHANGE(IDC_ID, &CMFCPRACTICEDlg::OnEnChangeId)
 	ON_EN_CHANGE(IDC_PWD, &CMFCPRACTICEDlg::OnEnChangePwd)
 	ON_BN_CLICKED(IDC_CONNECTION, &CMFCPRACTICEDlg::OnBnClickedConnection)
+	ON_BN_CLICKED(IDOK, &CMFCPRACTICEDlg::OnBnClickedOk)
 END_MESSAGE_MAP()
 
 
@@ -192,5 +193,18 @@ void CMFCPRACTICEDlg::OnBnClickedConnection()
 	GetDlgItemText(IDC_ID, m_id);
 	GetDlgItemText(IDC_PWD, m_pwd);
 
-	SetDlgItemText(IDC_LOG, m_id + "/" + m_pwd);
+	if (m_id != "1" || m_pwd != "1") {
+		MessageBox(_T("해당 ID와 PWD가 정확하지 않습니다"), _T("DB CONNECTION 오류"), MB_OK | MB_ICONSTOP);
+		SetDlgItemText(IDC_ID, _T(""));
+		SetDlgItemText(IDC_PWD, _T(""));
+	}		
+	else
+		SetDlgItemText(IDC_LOG, m_id + "/" + m_pwd);
+}
+
+
+void CMFCPRACTICEDlg::OnBnClickedOk()
+{
+	// TODO: 여기에 컨트롤 알림 처리기 코드를 추가합니다.
+	CDialogEx::OnOK();
 }
