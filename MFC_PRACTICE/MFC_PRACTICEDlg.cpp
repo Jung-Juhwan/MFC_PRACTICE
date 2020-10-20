@@ -193,16 +193,16 @@ void CMFCPRACTICEDlg::OnBnClickedConnection()
 	// TODO: 여기에 컨트롤 알림 처리기 코드를 추가합니다.
 	GetDlgItemText(IDC_ID, m_id);
 	GetDlgItemText(IDC_PWD, m_pwd);
+
+	m_id = "cis2011";
+	m_pwd = "infinitt";
 	//provider = "Provider=OraOLEDB.Oracle.1;PLSQLRSet=1; Data Source=localhost\\SQLEXPRESS; Trusted_Connection=yes; Database=orcl;";
 	
-	if (FAILED(::CoInitialize(NULL)))
-		return;
 
-
-
+	Database s;
 	CString strError;
 
-	if (!DB.Open(m_id,m_pwd,_T("orcl"),strError)) 
+	if (!s.Open(m_id,m_pwd,_T("orcl"),strError)) 
 	{
 		MessageBox(_T("해당 ID와 PWD가 정확하지 않습니다"), _T("DB CONNECTION 오류"), MB_OK | MB_ICONSTOP);
 		SetDlgItemText(IDC_ID, _T(""));

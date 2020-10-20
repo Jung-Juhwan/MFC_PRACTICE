@@ -28,13 +28,25 @@ Database::Database()
 //}
 
 BOOL Database::Open(LPCTSTR lpszUserName, LPCTSTR lpszPassword, LPCTSTR lpszServiceName,CString& strError)
-
 {
 	try
 	{
-		CString lpszConnText = ("Provider = OraOLEDB.Oracle.1; PLSQLRSet = 1; Data Source = % s; User ID = % s; Password = % s", lpszServiceName, lpszUserName, lpszPassword);
+		if(FAILED(::CoInitialize(NULL)))
+			return FALSE;
+
+		CString lpszConnText = _T("Provider = OraOLEDB.Oracle.1; PLSQLRSet = 1; Data Source = ");
+		lpszConnText.Append(lpszServiceName);
+		lpszConnText.Append(_T(";"));
+		CString UserID = _T(" User ID = ");
+		UserID.Append(lpszUserName);
+		UserID.Append(_T(";"));
+		CString PWD = _T(" Password = ");
+		PWD.Append(lpszPassword);
+		PWD.Append(_T(";"));
+		lpszConnText.Append(UserID);
+		lpszConnText.Append(PWD);
 		m_Con.CreateInstance(__uuidof(ADODB::Connection));
-		m_Con->Open(_bstr_t(lpszConnText), _T(""), _T(""), ADODB::adConnectUnspecified);
+		m_Con->Open(_bstr_t(lpszConnText), _T(""), _T(""), NULL);
 	}
 	catch (_com_error& e)
 	{		
