@@ -1,16 +1,14 @@
-﻿// Created by Microsoft (R) C/C++ Compiler Version 14.27.29112.0 (47969f2d).
+﻿// Created by Microsoft (R) C/C++ Compiler Version 14.27.29112.0 (258f3631).
 //
 // C:\Users\IPK-JHCHAE\Documents\GitHub\MFC_PRACTICE\MFC_PRACTICE\x64\Debug\msado15.tlh
 //
-// C++ source equivalent of type library C:\Program Files\Common Files\System\ado\msado15.dll
-// compiler-generated file created 10/19/20 at 16:55:32 - DO NOT EDIT!
+// C++ source equivalent of type library C:/Program Files/Common Files/System/ado/msado15.dll
+// compiler-generated file created 10/20/20 at 16:27:29 - DO NOT EDIT!
 
 #pragma once
 #pragma pack(push, 8)
 
 #include <comdef.h>
-
-namespace ADODB {
 
 //
 // Forward references and typedefs
@@ -5025,7 +5023,5 @@ _Record_Deprecated : _ADO
 //
 
 #include "C:\Users\IPK-JHCHAE\Documents\GitHub\MFC_PRACTICE\MFC_PRACTICE\x64\Debug\msado15.tli"
-
-} // namespace ADODB
 
 #pragma pack(pop)
