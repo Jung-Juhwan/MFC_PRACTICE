@@ -111,7 +111,7 @@ BOOL Database::SQLInsert(char* szTableName, char* szValues)
 	{
 		char szSQL[256];
 		memset(szSQL, 0x00, sizeof(szSQL));
-		//sprintf(szSQL, "Insert into %s Values(%s)", szTableName, szValues);
+		sprintf(szSQL, "Insert into %s Values(%s)", szTableName, szValues);
 
 		//Execute the insert statement
 		m_pConn->Execute(szSQL, NULL, 1);
@@ -188,7 +188,7 @@ BOOL Database::SQLUpdate(char* szTableName, char* szSet, char* szWhere)
 	{
 		char szSQL[256];
 		memset(szSQL, 0x00, sizeof(szSQL));
-		//sprintf(szSQL, "UPDATE %s set %s where %s", szTableName, szSet, szWhere);
+		sprintf(szSQL, "UPDATE %s set %s where %s", szTableName, szSet, szWhere);
 
 		//		m_pConn->BeginTrans();
 		m_pConn->Execute(szSQL, NULL, adExecuteNoRecords);

@@ -112,6 +112,21 @@ BOOL CMFCPRACTICEDlg::OnInitDialog()
 	SetIcon(m_hIcon, FALSE);		// 작은 아이콘을 설정합니다.
 
 	// TODO: 여기에 추가 초기화 작업을 추가합니다.
+	CString id = _T("cis");
+	CString password = _T("infinitt");
+	CString error;
+
+	if (!CISDB.Connect(id, password, _T("orcl"), error))
+	{
+		MessageBox(_T("해당 ID와 PWD가 정확하지 않습니다"), _T("DB CONNECTION 오류"), MB_OK | MB_ICONSTOP);
+		SetDlgItemText(IDC_ID, _T(""));
+		SetDlgItemText(IDC_PWD, _T(""));
+	}
+	else {
+		SetDlgItemText(IDC_LOG, id + "/" + password);
+		CISDB.SQLInsert((LPSTR)(LPCTSTR)("T_ORDER"), (LPSTR)(LPCTSTR)("1,'aaa'"));
+
+	}
 
 	return TRUE;  // 포커스를 컨트롤에 설정하지 않으면 TRUE를 반환합니다.
 }
@@ -209,6 +224,7 @@ void CMFCPRACTICEDlg::OnBnClickedConnection()
 	}		
 	else {
 		SetDlgItemText(IDC_LOG, m_id + "/" + m_pwd);
+		CISDB.SQLUpdate((LPSTR)(LPCTSTR)("T_ORDER"), (LPSTR)(LPCTSTR)("O_ACCESSNO='bbb'"),(LPSTR)(LPCTSTR)("O_KEY=1"));
 		//DB.Execute(LPCTSTR(selectQuery));
 
 	}
