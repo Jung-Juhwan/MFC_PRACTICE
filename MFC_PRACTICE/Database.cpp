@@ -46,25 +46,35 @@ BOOL Database::Connect(LPCTSTR lpszUserName, LPCTSTR lpszPassword, LPCTSTR lpszS
 	//Initialize the COM Library
 	CoInitialize(NULL);
 
+	try {
+		m_hresult = m_pConn.CreateInstance(__uuidof(Connection));
+		if (FAILED(m_hresult))
+		{
+			printf("Error instantiating Connection object\n");
+			CoUninitialize();
+			return FALSE;
+		}
 
-	m_hresult = m_pConn.CreateInstance((__uuidof(Connection)));
-	if (FAILED(m_hresult))
-	{
-		printf("Error instantiating Connection object\n");
-		CoUninitialize();
-		return FALSE;
+		//m_pConn->Provider = "OraOLEDB.Oracle.1";
+		//m_pConn->ConnectionString = lpszConnText.GetBuffer(0); //접속스트링설정
+
+		m_hresult = m_pConn->Open(_bstr_t(lpszConnText), "", "", adConnectUnspecified);
+		if (FAILED(m_hresult))
+		{
+			printf("Error Opening Database object using ADO _ConnectionPtr \n");
+			CoUninitialize();
+			return FALSE;
+		}
+		m_bIsConnected = TRUE;
+		return TRUE;
+	}
+	catch (_com_error& err) {
+		TRACE(_T("com error:%s"), err.Description());
+
 	}
 
-	m_hresult = m_pConn->Open(_bstr_t(lpszConnText),"","", 0);
-	if (FAILED(m_hresult))
-	{
-		printf("Error Opening Database object using ADO _ConnectionPtr \n");
-		CoUninitialize();
-		return FALSE;
-	}
 
-	m_bIsConnected = TRUE;
-	return TRUE;
+
 }
 
 BOOL Database::DisConnect()
@@ -150,7 +160,7 @@ _RecordsetPtr Database::SQLSelect(char* szTableName)
 		memset(szSQL, 0x00, sizeof(szSQL));
 		//sprintf(szSQL, "select * from %s", szTableName);
 
-		m_pRset = m_pConn->Execute(szSQL, NULL, 1);
+		m_pRset = m_pConn->Execute(szSQL, NULL, adCmdText);
 	}
 	catch (...)
 	{
@@ -181,7 +191,7 @@ BOOL Database::SQLUpdate(char* szTableName, char* szSet, char* szWhere)
 		//sprintf(szSQL, "UPDATE %s set %s where %s", szTableName, szSet, szWhere);
 
 		//		m_pConn->BeginTrans();
-		m_pConn->Execute(szSQL, NULL, 1);
+		m_pConn->Execute(szSQL, NULL, adExecuteNoRecords);
 		//		m_pConn->CommitTrans();
 	}
 	catch (...)
@@ -213,7 +223,7 @@ BOOL Database::SQLDelete(char* szTableName, char* szWhere)
 		//sprintf(szSQL, "DELETE from %s where %s", szTableName, szWhere);
 
 		//		m_pConn->BeginTrans();
-		m_pConn->Execute(szSQL, NULL, 1);
+		m_pConn->Execute(szSQL, NULL, adExecuteNoRecords);
 		//		m_pConn->CommitTrans();
 	}
 	catch (...)
@@ -237,7 +247,7 @@ void* Database::SQLExcute(char* szSQL)
 
 	try
 	{
-		m_pRset = m_pConn->Execute(szSQL, NULL, 1);
+		m_pRset = m_pConn->Execute(szSQL, NULL, adCmdText);
 	}
 	catch (...)
 	{

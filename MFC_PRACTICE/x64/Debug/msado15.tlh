@@ -1,9 +1,9 @@
-﻿// Created by Microsoft (R) C/C++ Compiler Version 14.27.29112.0 (258f3631).
+﻿// Created by Microsoft (R) C/C++ Compiler Version 14.27.29112.0 (663c39a0).
 //
 // C:\Users\IPK-JHCHAE\Documents\GitHub\MFC_PRACTICE\MFC_PRACTICE\x64\Debug\msado15.tlh
 //
-// C++ source equivalent of type library C:/Program Files/Common Files/System/ado/msado15.dll
-// compiler-generated file created 10/20/20 at 16:27:29 - DO NOT EDIT!
+// C++ source equivalent of type library C:\Program Files\Common Files\System\ado\msado15.dll
+// compiler-generated file created 10/26/20 at 09:37:15 - DO NOT EDIT!
 
 #pragma once
 #pragma pack(push, 8)
@@ -3121,8 +3121,8 @@ Recordset15 : _ADO
     long CacheSize;
     __declspec(property(get=GetCursorType,put=PutCursorType))
     enum CursorTypeEnum CursorType;
-    __declspec(property(get=GetEndOfFile))
-    VARIANT_BOOL EndOfFile;
+    __declspec(property(get=GetadoEOF))
+    VARIANT_BOOL adoEOF;
     __declspec(property(get=GetAbsolutePage,put=PutAbsolutePage))
     enum PositionEnum AbsolutePage;
     __declspec(property(get=GetLockType,put=PutLockType))
@@ -3154,7 +3154,7 @@ Recordset15 : _ADO
     enum CursorTypeEnum GetCursorType ( );
     void PutCursorType (
         enum CursorTypeEnum plCursorType );
-    VARIANT_BOOL GetEndOfFile ( );
+    VARIANT_BOOL GetadoEOF ( );
     FieldsPtr GetFields ( );
     enum LockTypeEnum GetLockType ( );
     void PutLockType (
@@ -3269,7 +3269,7 @@ Recordset15 : _ADO
         /*[out,retval]*/ enum CursorTypeEnum * plCursorType ) = 0;
       virtual HRESULT __stdcall put_CursorType (
         /*[in]*/ enum CursorTypeEnum plCursorType ) = 0;
-      virtual HRESULT __stdcall get_EndOfFile (
+      virtual HRESULT __stdcall get_adoEOF (
         /*[out,retval]*/ VARIANT_BOOL * pb ) = 0;
       virtual HRESULT __stdcall get_Fields (
         /*[out,retval]*/ struct Fields * * ppvObject ) = 0;
@@ -4194,8 +4194,8 @@ Recordset15_Deprecated : _ADO
     long CacheSize;
     __declspec(property(get=GetCursorType,put=PutCursorType))
     enum CursorTypeEnum CursorType;
-    __declspec(property(get=GetEndOfFile))
-    VARIANT_BOOL EndOfFile;
+    __declspec(property(get=GetadoEOF))
+    VARIANT_BOOL adoEOF;
     __declspec(property(get=GetAbsolutePage,put=PutAbsolutePage))
     PositionEnum_Param AbsolutePage;
     __declspec(property(get=GetLockType,put=PutLockType))
@@ -4227,7 +4227,7 @@ Recordset15_Deprecated : _ADO
     enum CursorTypeEnum GetCursorType ( );
     void PutCursorType (
         enum CursorTypeEnum plCursorType );
-    VARIANT_BOOL GetEndOfFile ( );
+    VARIANT_BOOL GetadoEOF ( );
     Fields_DeprecatedPtr GetFields ( );
     enum LockTypeEnum GetLockType ( );
     void PutLockType (
@@ -4342,7 +4342,7 @@ Recordset15_Deprecated : _ADO
         /*[out,retval]*/ enum CursorTypeEnum * plCursorType ) = 0;
       virtual HRESULT __stdcall put_CursorType (
         /*[in]*/ enum CursorTypeEnum plCursorType ) = 0;
-      virtual HRESULT __stdcall get_EndOfFile (
+      virtual HRESULT __stdcall get_adoEOF (
         /*[out,retval]*/ VARIANT_BOOL * pb ) = 0;
       virtual HRESULT __stdcall get_Fields (
         /*[out,retval]*/ struct Fields_Deprecated * * ppvObject ) = 0;

@@ -1,9 +1,9 @@
-﻿// Created by Microsoft (R) C/C++ Compiler Version 14.27.29112.0 (47969f2d).
+﻿// Created by Microsoft (R) C/C++ Compiler Version 14.27.29112.0 (663c39a0).
 //
 // C:\Users\IPK-JHCHAE\Documents\GitHub\MFC_PRACTICE\MFC_PRACTICE\x64\Debug\msado15.tli
 //
 // Wrapper implementations for type library C:\Program Files\Common Files\System\ado\msado15.dll
-// compiler-generated file created 10/19/20 at 16:55:32 - DO NOT EDIT!
+// compiler-generated file created 10/26/20 at 09:37:15 - DO NOT EDIT!
 
 #pragma once
 
@@ -2179,9 +2179,9 @@ inline void Recordset15::PutCursorType ( enum CursorTypeEnum plCursorType ) {
     if (FAILED(_hr)) _com_issue_errorex(_hr, this, __uuidof(this));
 }
 
-inline VARIANT_BOOL Recordset15::GetEndOfFile ( ) {
+inline VARIANT_BOOL Recordset15::GetadoEOF ( ) {
     VARIANT_BOOL _result = 0;
-    HRESULT _hr = get_EndOfFile(&_result);
+    HRESULT _hr = get_adoEOF(&_result);
     if (FAILED(_hr)) _com_issue_errorex(_hr, this, __uuidof(this));
     return _result;
 }
@@ -3176,9 +3176,9 @@ inline void Recordset15_Deprecated::PutCursorType ( enum CursorTypeEnum plCursor
     if (FAILED(_hr)) _com_issue_errorex(_hr, this, __uuidof(this));
 }
 
-inline VARIANT_BOOL Recordset15_Deprecated::GetEndOfFile ( ) {
+inline VARIANT_BOOL Recordset15_Deprecated::GetadoEOF ( ) {
     VARIANT_BOOL _result = 0;
-    HRESULT _hr = get_EndOfFile(&_result);
+    HRESULT _hr = get_adoEOF(&_result);
     if (FAILED(_hr)) _com_issue_errorex(_hr, this, __uuidof(this));
     return _result;
 }

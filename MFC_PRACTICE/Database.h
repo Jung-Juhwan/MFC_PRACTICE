@@ -1,5 +1,5 @@
 #pragma once
-#import "C:/Program Files/Common Files/System/ado/msado15.dll" rename("EOF", "EndOfFile") no_namespace
+#import "C:\Program Files\Common Files\System\ado\msado15.dll" rename("EOF", "adoEOF") no_namespace
 //typedef ADODB::_RecordsetPtr RecPtr;
 //typedef ADODB::_ConnectionPtr CnnPtr;
 
