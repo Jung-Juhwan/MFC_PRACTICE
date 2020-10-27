@@ -217,10 +217,27 @@ void CMFCPRACTICEDlg::OnBnClickedConnection()
 	//provider = "Provider=OraOLEDB.Oracle.1;PLSQLRSet=1; Data Source=localhost\\SQLEXPRESS; Trusted_Connection=yes; Database=orcl;";
 	
 	CString strError;
-	CString str=_T("");
-	_bstr_t bKeyContents;
 	CStringArray patient;
+	CStringArray department;
+	CStringArray examcode;
+	CStringArray order;
+
+	CStringArray patName;
+	CStringArray patBirth;
+	CStringArray patID;
+	CStringArray patSex;
+
+	CStringArray examCD;
+	CStringArray examName;
+	CStringArray examTYP;
+	CStringArray examTYPName;
+	
+	CStringArray ordDate;
+	CStringArray ordSeqNo;
+	CStringArray acptTime;
+
 	int index;
+	int c=0,a=0,b=0;
 	if (!DB.Connect(m_id,m_pwd,_T("cistest"),strError)) 
 	{
 		MessageBox(_T("해당 ID와 PWD가 정확하지 않습니다"), _T("DB CONNECTION 오류"), MB_OK | MB_ICONSTOP);
@@ -230,17 +247,59 @@ void CMFCPRACTICEDlg::OnBnClickedConnection()
 	else {
 		logList.InsertString(-1, m_id + "/" + m_pwd);
 
-		rs = DB.SQLSelect("TBLLINK_PATIENT");
-		while (!rs->adoEOF)
+		pat = DB.SQLSelect("TBLLINK_PATIENT");
+		eqip = DB.SQLSelect("TBLLINK_EQIPINFO");
+		work = DB.SQLSelect("TBLLINK_WORKLIST");
+		while (!pat->adoEOF)
 		{
-			patient.Add(rs->Fields->GetItem("PATID")->Value);  //문자형 일때 
-			rs->MoveNext();
+			patID.Add(pat->Fields->GetItem("PATID")->Value);
+			patName.Add(pat->Fields->GetItem("PATNAME")->Value);
+			patBirth.Add(pat->Fields->GetItem("BIRTH")->Value);
+			patSex.Add(pat->Fields->GetItem("PSEX")->Value);
+
+			patient.Add(patID.GetAt(c) + "\\" + patName.GetAt(c) + "\\" + patBirth.GetAt(c) +"\\" + patSex.GetAt(c));
+			pat->MoveNext();
+			c++;
 		}
-		
+		while (!eqip->adoEOF) {
+			examCD.Add(eqip->Fields->GetItem("EXAMCD")->Value);
+			examName.Add(eqip->Fields->GetItem("EXAMNAME")->Value);
+			examTYP.Add(eqip->Fields->GetItem("EXAMTYP")->Value);
+			examTYPName.Add(eqip->Fields->GetItem("EXAMTYPNAME")->Value);
+
+			examcode.Add(examCD.GetAt(a) + "\\" + examName.GetAt(a));
+			department.Add(examTYP.GetAt(a) + "\\" + examTYPName.GetAt(a));
+			eqip->MoveNext();
+			a++;
+		}
+		while (!work->adoEOF) {
+			ordDate.Add(work->Fields->GetItem("ORDDATE")->Value);
+			ordSeqNo.Add(work->Fields->GetItem("ORDSEQNO")->Value);
+			acptTime.Add(work->Fields->GetItem("ACPTTIME")->Value);
+
+			order.Add(ordSeqNo.GetAt(b));
+			work->MoveNext();
+			b++;
+		}
 		for (int i = 0; i < patient.GetCount(); i++) {
 			index=logList.InsertString(-1, patient.GetAt(i));
+			CISDB.SQLPatientInsert(_T("T_PATIENT"), patID.GetAt(i),patName.GetAt(i),patSex.GetAt(i),patBirth.GetAt(i));
+		}
+
+		for (int i = 0; i < order.GetCount(); i++) {
+			index = logList.InsertString(-1, order.GetAt(i));
+			CISDB.SQLOrderInsert(_T("T_ORDER"), ordSeqNo.GetAt(i));
+		}
+		for (int i = 0; i < department.GetCount(); i++) {
+			index = logList.InsertString(-1, department.GetAt(i));
+			CISDB.SQLDepartmentInsert(_T("T_DEPARTMENT"), examTYP.GetAt(i), examTYPName.GetAt(i));
+		}
+		for (int i = 0; i < examcode.GetCount(); i++) {
+			index = logList.InsertString(-1, examcode.GetAt(i));
+			CISDB.SQLExamCodeInsert(_T("T_EXAMCODE"), examCD.GetAt(i), examName.GetAt(i));
 		}
 		logList.SetCurSel(index);
+
 		/*
 		sqlCount=DB.SQLCount("TBLLINK_EQIPINFO");
 		str.Format(_T("%d"), sqlCount);

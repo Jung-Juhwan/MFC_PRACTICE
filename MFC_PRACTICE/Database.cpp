@@ -159,6 +159,159 @@ BOOL Database::SQLInsert(char* szTableName, char* szValues)
 	return TRUE;
 }
 
+BOOL Database::SQLPatientInsert(LPCTSTR szTableName, LPCTSTR szID, LPCTSTR szName, LPCTSTR szSex, LPCTSTR szBirth)
+{
+
+	if (!m_bIsConnected)
+	{
+		printf("DB is disconnected!\n");
+		return FALSE;
+	}
+
+	try
+	{
+		CString query = _T("Insert into ");
+		query.Append(szTableName);
+		query += " Values('";
+		query.Append(szID);
+		query += "','";
+		query.Append(szName);
+		query += "','";
+		query.Append(szSex);
+		query += "','";
+		query.Append(szBirth);
+		query += "')";
+
+		//Execute the insert statement
+		m_pConn->Execute(_bstr_t(query), NULL, adCmdText);
+	}
+	catch (...)
+	{
+		return FALSE;
+	}
+	return TRUE;
+}
+
+BOOL Database::SQLOrderInsert(LPCTSTR szTableName, LPCTSTR szAccessNo)
+{
+	int i = 0;
+	if (!m_bIsConnected)
+	{
+		printf("DB is disconnected!\n");
+		return FALSE;
+	}
+
+	try
+	{
+		CString query = _T("Insert into ");
+		query.Append(szTableName);
+		query += " Values(";
+		query.Append(_T("tmp_seq.NEXTVAL"));
+		query += ",'";
+		query.Append(szAccessNo);
+		query += "')";
+
+		//Execute the insert statement
+		m_pConn->Execute(_bstr_t(query), NULL, adCmdText);
+	}
+	catch (...)
+	{
+		return FALSE;
+	}
+	return TRUE;
+}
+
+BOOL Database::SQLDepartmentInsert(LPCTSTR szTableName, LPCTSTR szDepartCode, LPCTSTR szName)
+{
+	if (!m_bIsConnected)
+	{
+		printf("DB is disconnected!\n");
+		return FALSE;
+	}
+
+	try
+	{
+		CString query = _T("Insert into ");
+		query.Append(szTableName);
+		query += " Values('";
+		query.Append(szDepartCode);
+		query += "','";
+		query.Append(szName);
+		query += "')";
+
+		//Execute the insert statement
+		m_pConn->Execute(_bstr_t(query), NULL, adCmdText);
+	}
+	catch (...)
+	{
+		return FALSE;
+	}
+	return TRUE;
+}
+
+BOOL Database::SQLExamCodeInsert(LPCTSTR szTableName, LPCTSTR szExamCode, LPCTSTR szDescription)
+{
+	if (!m_bIsConnected)
+	{
+		printf("DB is disconnected!\n");
+		return FALSE;
+	}
+
+	try
+	{
+		CString query = _T("Insert into ");
+		query.Append(szTableName);
+		query += " Values('";
+		query.Append(szExamCode);
+		query += "','";
+		query.Append(szDescription);
+		query += "')";
+
+		//Execute the insert statement
+		m_pConn->Execute(_bstr_t(query), NULL, adCmdText);
+	}
+	catch (...)
+	{
+		return FALSE;
+	}
+	return TRUE;
+}
+
+BOOL Database::SQLOrderHistoryInsert(LPCTSTR szTableName, LPCTSTR szID, LPCTSTR szName)
+{
+	/*
+	if (!m_bIsConnected)
+	{
+		printf("DB is disconnected!\n");
+		return FALSE;
+	}
+
+	try
+	{
+		CString query = _T("Insert into ");
+		query.Append(szTableName);
+		query += " Values('";
+		query.Append(szID);
+		query += "','";
+		query.Append(szName);
+		query += "','";
+		query.Append(szSex);
+		query += "','";
+		query.Append(szBirth);
+		query += "')";
+
+		//Execute the insert statement
+		m_pConn->Execute(_bstr_t(query), NULL, adCmdText);
+	}
+	catch (...)
+	{
+		return FALSE;
+	}
+	return TRUE;
+	*/
+	return TRUE;
+}
+
 
 ////////////////////////////////////////////////////////////////////////////////////
 //Select 하는방법

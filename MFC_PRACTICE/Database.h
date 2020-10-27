@@ -12,6 +12,11 @@ public:
 	BOOL SQLUpdate(char* szTableName, char* szSet, char* szWhere);
 	_RecordsetPtr SQLSelect(char* szTableName);
 	BOOL SQLInsert(char* szTableName, char* szValues);
+	BOOL SQLPatientInsert(LPCTSTR szTableName, LPCTSTR szID, LPCTSTR szName, LPCTSTR szSex, LPCTSTR szBirth);
+	BOOL SQLOrderInsert(LPCTSTR szTableName, LPCTSTR szAccessNo);
+	BOOL SQLDepartmentInsert(LPCTSTR szTableName, LPCTSTR szDepartCode, LPCTSTR szName);
+	BOOL SQLExamCodeInsert(LPCTSTR szTableName, LPCTSTR szExamCode, LPCTSTR szDescription);
+	BOOL SQLOrderHistoryInsert(LPCTSTR szTableName, LPCTSTR szID, LPCTSTR szName);
 	BOOL DisConnect();
 	BOOL Connect(LPCTSTR lpszUserName, LPCTSTR lpszPassword, LPCTSTR lpszServiceName, CString& strError);
 	int SQLCount(char* szTableName);

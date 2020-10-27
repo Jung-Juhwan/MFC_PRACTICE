@@ -22,7 +22,9 @@ public:
 
 	Database DB;
 	Database CISDB;
-	_RecordsetPtr rs;
+	_RecordsetPtr eqip;
+	_RecordsetPtr pat;
+	_RecordsetPtr work;
 	void GetData(CString& a, CString& b);
 	CString m_id;
 	CString m_pwd;
