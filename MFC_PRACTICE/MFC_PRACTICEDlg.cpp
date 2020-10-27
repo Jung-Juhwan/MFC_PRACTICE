@@ -60,6 +60,7 @@ CMFCPRACTICEDlg::CMFCPRACTICEDlg(CWnd* pParent /*=nullptr*/)
 void CMFCPRACTICEDlg::DoDataExchange(CDataExchange* pDX)
 {
 	CDialogEx::DoDataExchange(pDX);
+	DDX_Control(pDX, IDC_LOG, logList);
 }
 
 void CMFCPRACTICEDlg::GetData(CString& a,CString& b)
@@ -77,6 +78,7 @@ BEGIN_MESSAGE_MAP(CMFCPRACTICEDlg, CDialogEx)
 	ON_EN_CHANGE(IDC_PWD, &CMFCPRACTICEDlg::OnEnChangePwd)
 	ON_BN_CLICKED(IDC_CONNECTION, &CMFCPRACTICEDlg::OnBnClickedConnection)
 	ON_BN_CLICKED(IDOK, &CMFCPRACTICEDlg::OnBnClickedOk)
+	ON_LBN_SELCHANGE(IDC_LOG, &CMFCPRACTICEDlg::OnLbnSelchangeLog)
 END_MESSAGE_MAP()
 
 
@@ -123,9 +125,8 @@ BOOL CMFCPRACTICEDlg::OnInitDialog()
 		SetDlgItemText(IDC_PWD, _T(""));
 	}
 	else {
-		SetDlgItemText(IDC_LOG, id + "/" + password);
-		CISDB.SQLInsert((LPSTR)(LPCTSTR)("T_ORDER"), (LPSTR)(LPCTSTR)("1,'aaa'"));
-
+		logList.InsertString(-1,id + "/" + password);
+		//CISDB.SQLInsert((LPSTR)(LPCTSTR)("T_ORDER"), (LPSTR)(LPCTSTR)("1,'aaa'"));
 	}
 
 	return TRUE;  // 포커스를 컨트롤에 설정하지 않으면 TRUE를 반환합니다.
@@ -206,6 +207,7 @@ void CMFCPRACTICEDlg::OnEnChangePwd()
 void CMFCPRACTICEDlg::OnBnClickedConnection()
 {
 	CString selectQuery = _T("");
+	int sqlCount = 0;
 	// TODO: 여기에 컨트롤 알림 처리기 코드를 추가합니다.
 	GetDlgItemText(IDC_ID, m_id);
 	GetDlgItemText(IDC_PWD, m_pwd);
@@ -215,7 +217,10 @@ void CMFCPRACTICEDlg::OnBnClickedConnection()
 	//provider = "Provider=OraOLEDB.Oracle.1;PLSQLRSet=1; Data Source=localhost\\SQLEXPRESS; Trusted_Connection=yes; Database=orcl;";
 	
 	CString strError;
-
+	CString str=_T("");
+	_bstr_t bKeyContents;
+	CStringArray patient;
+	int index;
 	if (!DB.Connect(m_id,m_pwd,_T("cistest"),strError)) 
 	{
 		MessageBox(_T("해당 ID와 PWD가 정확하지 않습니다"), _T("DB CONNECTION 오류"), MB_OK | MB_ICONSTOP);
@@ -223,9 +228,27 @@ void CMFCPRACTICEDlg::OnBnClickedConnection()
 		SetDlgItemText(IDC_PWD, _T(""));
 	}		
 	else {
-		SetDlgItemText(IDC_LOG, m_id + "/" + m_pwd);
-		CISDB.SQLUpdate((LPSTR)(LPCTSTR)("T_ORDER"), (LPSTR)(LPCTSTR)("O_ACCESSNO='bbb'"),(LPSTR)(LPCTSTR)("O_KEY=1"));
-		//DB.Execute(LPCTSTR(selectQuery));
+		logList.InsertString(-1, m_id + "/" + m_pwd);
+
+		rs = DB.SQLSelect("TBLLINK_PATIENT");
+		while (!rs->adoEOF)
+		{
+			patient.Add(rs->Fields->GetItem("PATID")->Value);  //문자형 일때 
+			rs->MoveNext();
+		}
+		
+		for (int i = 0; i < patient.GetCount(); i++) {
+			index=logList.InsertString(-1, patient.GetAt(i));
+		}
+		logList.SetCurSel(index);
+		/*
+		sqlCount=DB.SQLCount("TBLLINK_EQIPINFO");
+		str.Format(_T("%d"), sqlCount);
+		SetDlgItemText(IDC_LOG, str);
+		*/
+
+		//CISDB.SQLInsert((LPSTR)(LPCTSTR)("T_ORDER"), (LPSTR)(LPCTSTR)("1,'aaa'"));
+	
 
 	}
 
@@ -237,4 +260,10 @@ void CMFCPRACTICEDlg::OnBnClickedOk()
 {
 	// TODO: 여기에 컨트롤 알림 처리기 코드를 추가합니다.
 	CDialogEx::OnOK();
+}
+
+
+void CMFCPRACTICEDlg::OnLbnSelchangeLog()
+{
+	// TODO: 여기에 컨트롤 알림 처리기 코드를 추가합니다.
 }

@@ -14,6 +14,7 @@ public:
 	BOOL SQLInsert(char* szTableName, char* szValues);
 	BOOL DisConnect();
 	BOOL Connect(LPCTSTR lpszUserName, LPCTSTR lpszPassword, LPCTSTR lpszServiceName, CString& strError);
+	int SQLCount(char* szTableName);
 	Database();
 	virtual~Database();
 

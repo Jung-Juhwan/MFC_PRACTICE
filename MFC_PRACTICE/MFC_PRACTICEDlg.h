@@ -22,6 +22,7 @@ public:
 
 	Database DB;
 	Database CISDB;
+	_RecordsetPtr rs;
 	void GetData(CString& a, CString& b);
 	CString m_id;
 	CString m_pwd;
@@ -43,4 +44,6 @@ public:
 	afx_msg void OnEnChangePwd();
 	afx_msg void OnBnClickedConnection();
 	afx_msg void OnBnClickedOk();
+	afx_msg void OnLbnSelchangeLog();
+	CListBox logList;
 };

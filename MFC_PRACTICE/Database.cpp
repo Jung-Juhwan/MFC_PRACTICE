@@ -77,6 +77,42 @@ BOOL Database::Connect(LPCTSTR lpszUserName, LPCTSTR lpszPassword, LPCTSTR lpszS
 
 }
 
+int Database::SQLCount(char* szTableName)
+{
+	int count = 0;
+
+	if (!m_bIsConnected)
+	{
+		printf("DB is disconnected!\n");
+		return 0;
+	}
+
+	try
+	{
+		char szSQL[256];
+		memset(szSQL, 0x00, sizeof(szSQL));
+		sprintf(szSQL, "Select * from %s", szTableName);
+		
+		//Execute the insert statement
+		m_pRset = m_pConn->Execute(szSQL, NULL, adCmdText);
+
+		if (m_pRset->adoEOF) {
+			return 0;
+		}
+
+		while (!m_pRset->adoEOF)
+		{
+			m_pRset->MoveNext();
+			count++;
+		}
+	}
+	catch (...)
+	{
+		return 0;
+	}
+	return count;
+}
+
 BOOL Database::DisConnect()
 {
 	if (!m_bIsConnected)
@@ -158,7 +194,7 @@ _RecordsetPtr Database::SQLSelect(char* szTableName)
 	{
 		char szSQL[256];
 		memset(szSQL, 0x00, sizeof(szSQL));
-		//sprintf(szSQL, "select * from %s", szTableName);
+		sprintf(szSQL, "select * from %s", szTableName);
 
 		m_pRset = m_pConn->Execute(szSQL, NULL, adCmdText);
 	}
