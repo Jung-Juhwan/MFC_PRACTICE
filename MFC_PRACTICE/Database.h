@@ -10,6 +10,7 @@ public:
 	void* SQLExcute(char *szSQL);
 	BOOL SQLDelete(char *szTableName, char *szWhere);
 	BOOL SQLUpdate(char* szTableName, char* szSet, char* szWhere);
+	BOOL SQLREADYNUpdate(LPCTSTR szTableName, LPCTSTR PK, int choice);
 	_RecordsetPtr SQLSelect(char* szTableName);
 	BOOL SQLInsert(char* szTableName, char* szValues);
 	BOOL SQLPatientInsert(LPCTSTR szTableName, LPCTSTR szID, LPCTSTR szName, LPCTSTR szSex, LPCTSTR szBirth);

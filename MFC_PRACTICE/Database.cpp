@@ -390,6 +390,50 @@ BOOL Database::SQLUpdate(char* szTableName, char* szSet, char* szWhere)
 	return TRUE;
 }
 
+BOOL Database::SQLREADYNUpdate(LPCTSTR szTableName, LPCTSTR PK, int choice)
+{
+	if (!m_bIsConnected)
+	{
+		printf("DB is disconnected!\n");
+		return FALSE;
+	}
+
+	try
+	{
+		CString query = _T("Update ");
+		query.Append(szTableName);
+		query += " set READYN='Y' where ";
+		switch (choice)
+		{
+			case 1: //EQIPINFO 테이블
+				query += "EXAMCD = ";
+				query.Append(PK);
+				break;
+			case 2: //PATIENT 테이블
+				query += "PATID = ";
+				query.Append(PK);
+				break;
+			case 3: //worklist 테이블
+				query += "ORDSEQNO = ";
+				query.Append(PK);
+				break;
+
+		default:
+			break;
+		}
+
+
+		//		m_pConn->BeginTrans();
+		m_pConn->Execute(_bstr_t(query), NULL, adExecuteNoRecords);
+		//		m_pConn->CommitTrans();
+	}
+	catch (...)
+	{
+		return FALSE;
+	}
+	return TRUE;
+}
+
 ////////////////////////////////////////////////////////////////////////////////////
 //Delete 하는방법
 //Delete from szTableName where szWhere 의 형태로 사용

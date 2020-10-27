@@ -226,15 +226,18 @@ void CMFCPRACTICEDlg::OnBnClickedConnection()
 	CStringArray patBirth;
 	CStringArray patID;
 	CStringArray patSex;
+	CStringArray patREADYN;
 
 	CStringArray examCD;
 	CStringArray examName;
 	CStringArray examTYP;
 	CStringArray examTYPName;
+	CStringArray eqipREADYN;
 	
 	CStringArray ordDate;
 	CStringArray ordSeqNo;
 	CStringArray acptTime;
+	CStringArray workREADYN;
 
 	int index;
 	int c=0,a=0,b=0;
@@ -245,39 +248,59 @@ void CMFCPRACTICEDlg::OnBnClickedConnection()
 		SetDlgItemText(IDC_PWD, _T(""));
 	}		
 	else {
-		logList.InsertString(-1, m_id + "/" + m_pwd);
+		index=logList.InsertString(-1, m_id + "/" + m_pwd);
 
 		pat = DB.SQLSelect("TBLLINK_PATIENT");
 		eqip = DB.SQLSelect("TBLLINK_EQIPINFO");
 		work = DB.SQLSelect("TBLLINK_WORKLIST");
 		while (!pat->adoEOF)
 		{
-			patID.Add(pat->Fields->GetItem("PATID")->Value);
-			patName.Add(pat->Fields->GetItem("PATNAME")->Value);
-			patBirth.Add(pat->Fields->GetItem("BIRTH")->Value);
-			patSex.Add(pat->Fields->GetItem("PSEX")->Value);
+			patREADYN.Add(pat->Fields->GetItem("READYN")->Value);
 
-			patient.Add(patID.GetAt(c) + "\\" + patName.GetAt(c) + "\\" + patBirth.GetAt(c) +"\\" + patSex.GetAt(c));
+			if (patREADYN.GetAt(c)==(_T("N"))) {
+				patID.Add(pat->Fields->GetItem("PATID")->Value);
+				patName.Add(pat->Fields->GetItem("PATNAME")->Value);
+				patBirth.Add(pat->Fields->GetItem("BIRTH")->Value);
+				patSex.Add(pat->Fields->GetItem("PSEX")->Value);
+				patient.Add(patID.GetAt(c) + "\\" + patName.GetAt(c) + "\\" + patBirth.GetAt(c) + "\\" + patSex.GetAt(c));
+
+				DB.SQLREADYNUpdate(_T("TBLLINK_PATIENT"), patID.GetAt(c), 2);
+			}
+
 			pat->MoveNext();
 			c++;
 		}
 		while (!eqip->adoEOF) {
-			examCD.Add(eqip->Fields->GetItem("EXAMCD")->Value);
-			examName.Add(eqip->Fields->GetItem("EXAMNAME")->Value);
-			examTYP.Add(eqip->Fields->GetItem("EXAMTYP")->Value);
-			examTYPName.Add(eqip->Fields->GetItem("EXAMTYPNAME")->Value);
 
-			examcode.Add(examCD.GetAt(a) + "\\" + examName.GetAt(a));
-			department.Add(examTYP.GetAt(a) + "\\" + examTYPName.GetAt(a));
+			eqipREADYN.Add(eqip->Fields->GetItem("READYN")->Value);
+
+			if (eqipREADYN.GetAt(a)==(_T("N"))) {
+				examCD.Add(eqip->Fields->GetItem("EXAMCD")->Value);
+				examName.Add(eqip->Fields->GetItem("EXAMNAME")->Value);
+				examTYP.Add(eqip->Fields->GetItem("EXAMTYP")->Value);
+				examTYPName.Add(eqip->Fields->GetItem("EXAMTYPNAME")->Value);
+				examcode.Add(examCD.GetAt(a) + "\\" + examName.GetAt(a));
+				department.Add(examTYP.GetAt(a) + "\\" + examTYPName.GetAt(a));
+
+				DB.SQLREADYNUpdate(_T("TBLLINK_EQIPINFO"), examCD.GetAt(a), 1);
+			}
+
 			eqip->MoveNext();
 			a++;
 		}
 		while (!work->adoEOF) {
-			ordDate.Add(work->Fields->GetItem("ORDDATE")->Value);
-			ordSeqNo.Add(work->Fields->GetItem("ORDSEQNO")->Value);
-			acptTime.Add(work->Fields->GetItem("ACPTTIME")->Value);
 
-			order.Add(ordSeqNo.GetAt(b));
+			workREADYN.Add(work->Fields->GetItem("READYN")->Value);
+
+			if (workREADYN.GetAt(b)==(_T("N"))) {
+				ordDate.Add(work->Fields->GetItem("ORDDATE")->Value);
+				ordSeqNo.Add(work->Fields->GetItem("ORDSEQNO")->Value);
+				acptTime.Add(work->Fields->GetItem("ACPTTIME")->Value);
+				order.Add(ordSeqNo.GetAt(b));
+				
+				DB.SQLREADYNUpdate(_T("TBLLINK_WORKLIST"), ordSeqNo.GetAt(b),3);
+			}
+
 			work->MoveNext();
 			b++;
 		}
