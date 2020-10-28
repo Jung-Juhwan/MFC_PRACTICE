@@ -228,6 +228,7 @@ void CMFCPRACTICEDlg::OnBnClickedConnection()
 	CStringArray patSex;
 	CStringArray patREADYN;
 
+	CStringArray eqipCD;
 	CStringArray examCD;
 	CStringArray examName;
 	CStringArray examTYP;
@@ -238,7 +239,7 @@ void CMFCPRACTICEDlg::OnBnClickedConnection()
 	CStringArray ordSeqNo;
 	CStringArray acptTime;
 	CStringArray workREADYN;
-
+	CString compareWord = _T("N");
 	int index;
 	int c=0,a=0,b=0;
 	if (!DB.Connect(m_id,m_pwd,_T("cistest"),strError)) 
@@ -253,36 +254,43 @@ void CMFCPRACTICEDlg::OnBnClickedConnection()
 		pat = DB.SQLSelect("TBLLINK_PATIENT");
 		eqip = DB.SQLSelect("TBLLINK_EQIPINFO");
 		work = DB.SQLSelect("TBLLINK_WORKLIST");
+		
+
 		while (!pat->adoEOF)
 		{
 			patREADYN.Add(pat->Fields->GetItem("READYN")->Value);
 
-			if (patREADYN.GetAt(c)==(_T("N"))) {
+		
+			if (patREADYN.GetAt(c).Compare(compareWord)==0) {
 				patID.Add(pat->Fields->GetItem("PATID")->Value);
 				patName.Add(pat->Fields->GetItem("PATNAME")->Value);
 				patBirth.Add(pat->Fields->GetItem("BIRTH")->Value);
 				patSex.Add(pat->Fields->GetItem("PSEX")->Value);
-				patient.Add(patID.GetAt(c) + "\\" + patName.GetAt(c) + "\\" + patBirth.GetAt(c) + "\\" + patSex.GetAt(c));
+
+				CISDB.SQLPatientInsert(_T("T_PATIENT"), patID.GetAt(c), patName.GetAt(c), patSex.GetAt(c), patBirth.GetAt(c));
 
 				DB.SQLREADYNUpdate(_T("TBLLINK_PATIENT"), patID.GetAt(c), 2);
 			}
-
+			
 			pat->MoveNext();
 			c++;
 		}
+
 		while (!eqip->adoEOF) {
 
 			eqipREADYN.Add(eqip->Fields->GetItem("READYN")->Value);
 
-			if (eqipREADYN.GetAt(a)==(_T("N"))) {
+			if (eqipREADYN.GetAt(a).Compare(compareWord)==0) {
+				eqipCD.Add(eqip->Fields->GetItem("EQIPCD")->Value);
 				examCD.Add(eqip->Fields->GetItem("EXAMCD")->Value);
 				examName.Add(eqip->Fields->GetItem("EXAMNAME")->Value);
 				examTYP.Add(eqip->Fields->GetItem("EXAMTYP")->Value);
 				examTYPName.Add(eqip->Fields->GetItem("EXAMTYPNAME")->Value);
-				examcode.Add(examCD.GetAt(a) + "\\" + examName.GetAt(a));
-				department.Add(examTYP.GetAt(a) + "\\" + examTYPName.GetAt(a));
 
-				DB.SQLREADYNUpdate(_T("TBLLINK_EQIPINFO"), examCD.GetAt(a), 1);
+				CISDB.SQLDepartmentInsert(_T("T_DEPARTMENT"), examTYP.GetAt(a), examTYPName.GetAt(a));
+				CISDB.SQLExamCodeInsert(_T("T_EXAMCODE"), examCD.GetAt(a), examName.GetAt(a));
+
+				DB.SQLREADYNUpdate(_T("TBLLINK_EQIPINFO"), eqipCD.GetAt(a), 1);
 			}
 
 			eqip->MoveNext();
@@ -292,34 +300,18 @@ void CMFCPRACTICEDlg::OnBnClickedConnection()
 
 			workREADYN.Add(work->Fields->GetItem("READYN")->Value);
 
-			if (workREADYN.GetAt(b)==(_T("N"))) {
+			if (workREADYN.GetAt(b).Compare(compareWord)==0) {
 				ordDate.Add(work->Fields->GetItem("ORDDATE")->Value);
 				ordSeqNo.Add(work->Fields->GetItem("ORDSEQNO")->Value);
 				acptTime.Add(work->Fields->GetItem("ACPTTIME")->Value);
-				order.Add(ordSeqNo.GetAt(b));
-				
+
+				CISDB.SQLOrderInsert(_T("T_ORDER"), ordSeqNo.GetAt(b));
+
 				DB.SQLREADYNUpdate(_T("TBLLINK_WORKLIST"), ordSeqNo.GetAt(b),3);
 			}
 
 			work->MoveNext();
 			b++;
-		}
-		for (int i = 0; i < patient.GetCount(); i++) {
-			index=logList.InsertString(-1, patient.GetAt(i));
-			CISDB.SQLPatientInsert(_T("T_PATIENT"), patID.GetAt(i),patName.GetAt(i),patSex.GetAt(i),patBirth.GetAt(i));
-		}
-
-		for (int i = 0; i < order.GetCount(); i++) {
-			index = logList.InsertString(-1, order.GetAt(i));
-			CISDB.SQLOrderInsert(_T("T_ORDER"), ordSeqNo.GetAt(i));
-		}
-		for (int i = 0; i < department.GetCount(); i++) {
-			index = logList.InsertString(-1, department.GetAt(i));
-			CISDB.SQLDepartmentInsert(_T("T_DEPARTMENT"), examTYP.GetAt(i), examTYPName.GetAt(i));
-		}
-		for (int i = 0; i < examcode.GetCount(); i++) {
-			index = logList.InsertString(-1, examcode.GetAt(i));
-			CISDB.SQLExamCodeInsert(_T("T_EXAMCODE"), examCD.GetAt(i), examName.GetAt(i));
 		}
 		logList.SetCurSel(index);
 

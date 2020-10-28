@@ -406,7 +406,7 @@ BOOL Database::SQLREADYNUpdate(LPCTSTR szTableName, LPCTSTR PK, int choice)
 		switch (choice)
 		{
 			case 1: //EQIPINFO 테이블
-				query += "EXAMCD = ";
+				query += "EQIPCD = ";
 				query.Append(PK);
 				break;
 			case 2: //PATIENT 테이블
