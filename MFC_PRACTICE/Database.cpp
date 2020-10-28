@@ -1,5 +1,7 @@
 #include "pch.h"
 #include "Database.h"
+#include <time.h>
+
 
 Database::Database()
 {
@@ -277,27 +279,59 @@ BOOL Database::SQLExamCodeInsert(LPCTSTR szTableName, LPCTSTR szExamCode, LPCTST
 	return TRUE;
 }
 
-BOOL Database::SQLOrderHistoryInsert(LPCTSTR szTableName, LPCTSTR szID, LPCTSTR szName)
+BOOL Database::SQLOrderHistoryInsert(LPCTSTR szTableName,  LPCTSTR okey, LPCTSTR deptcode, LPCTSTR examcode, LPCTSTR patid, LPCTSTR publish, LPCTSTR registration)
 {
-	/*
+	time_t curTime = time(NULL);
+	struct tm* pLocal = NULL;
+
+#if defined(_WIN32) || defined(_WIN64) 
+	pLocal = localtime(&curTime);
+#else 
+	localtime_r(&curTime, pLocal);
+#endif 
+
+	CString timeDate;
 	if (!m_bIsConnected)
 	{
 		printf("DB is disconnected!\n");
 		return FALSE;
 	}
 
+	if(pLocal == NULL)
+	{
+		// Failed to convert the current time 
+		return false;
+	}
+
+	CString year;
+	year.Format(_T("%d"), pLocal->tm_year + 1900);
+	CString mon;
+	mon.Format(_T("%d"), pLocal->tm_mon + 1);
+	CString day;
+	day.Format(_T("%d"), pLocal->tm_mday);
+
+	timeDate += year + "-" + mon + "-" + day;
+
 	try
 	{
 		CString query = _T("Insert into ");
 		query.Append(szTableName);
-		query += " Values('";
-		query.Append(szID);
+		query += "(OH_KEY,OH_STARTDT,OH_OKEY,OH_DEPTCODE,OH_EXAMCODE,OH_PATID,OH_PUBLISHORDERDT,OH_ORDERREGISTRATIONDT) Values(";
+		query.Append(_T("tmp_seq2.NEXTVAL"));
+		query += ",'";
+		query.Append(timeDate);
 		query += "','";
-		query.Append(szName);
+		query.Append(okey);
 		query += "','";
-		query.Append(szSex);
+		query.Append(deptcode);
 		query += "','";
-		query.Append(szBirth);
+		query.Append(examcode);
+		query += "','";
+		query.Append(patid);
+		query += "','";
+		query.Append(publish);
+		query += "','";
+		query.Append(registration);
 		query += "')";
 
 		//Execute the insert statement
@@ -307,8 +341,7 @@ BOOL Database::SQLOrderHistoryInsert(LPCTSTR szTableName, LPCTSTR szID, LPCTSTR 
 	{
 		return FALSE;
 	}
-	return TRUE;
-	*/
+
 	return TRUE;
 }
 
@@ -356,6 +389,40 @@ _RecordsetPtr Database::SQLSelect(char* szTableName)
 		return 0;
 	}
 	return m_pRset;
+}
+
+CString Database::SQLGetKey(LPCTSTR szTableName, LPCTSTR value, LPCTSTR szAccessNo)
+{
+	CString result;
+
+	if (!m_bIsConnected)
+	{
+		printf("DB is disconnected!\n");
+		return 0;
+	}
+	try
+	{
+		CString query = _T("Select ");
+		query.Append(value);
+		query += " from ";
+		query.Append(szTableName);
+		query += " where O_ACCESSNO='";
+		query.Append(szAccessNo);
+		query += "'";
+
+		//Execute the insert statement
+		m_pRset = m_pConn->Execute(_bstr_t(query), NULL, adCmdText);
+
+		while (!m_pRset->adoEOF) {
+			result = m_pRset->Fields->GetItem(value)->Value;
+		}
+	}
+	catch (...)
+	{
+		return NULL;
+	}
+
+	return result;
 }
 
 ////////////////////////////////////////////////////////////////////////////////////

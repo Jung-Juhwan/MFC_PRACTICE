@@ -25,6 +25,7 @@ public:
 	_RecordsetPtr eqip;
 	_RecordsetPtr pat;
 	_RecordsetPtr work;
+	_RecordsetPtr orderT;
 	void GetData(CString& a, CString& b);
 	CString m_id;
 	CString m_pwd;

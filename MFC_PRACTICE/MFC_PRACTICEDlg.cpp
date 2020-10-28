@@ -224,14 +224,14 @@ void CMFCPRACTICEDlg::OnBnClickedConnection()
 
 	CStringArray patName;
 	CStringArray patBirth;
-	CStringArray patID;
+	CStringArray patID,workPatID;
 	CStringArray patSex;
 	CStringArray patREADYN;
 
 	CStringArray eqipCD;
-	CStringArray examCD;
+	CStringArray examCD,workExamCD;
 	CStringArray examName;
-	CStringArray examTYP;
+	CStringArray examTYP,workExamTYP;
 	CStringArray examTYPName;
 	CStringArray eqipREADYN;
 	
@@ -239,6 +239,13 @@ void CMFCPRACTICEDlg::OnBnClickedConnection()
 	CStringArray ordSeqNo;
 	CStringArray acptTime;
 	CStringArray workREADYN;
+
+	CString getDate;
+	CString putDate;
+	CString strYear;
+	CString strMonth;
+	CString strDay;
+
 	CString compareWord = _T("N");
 	int index;
 	int c=0,a=0,b=0;
@@ -255,32 +262,11 @@ void CMFCPRACTICEDlg::OnBnClickedConnection()
 		eqip = DB.SQLSelect("TBLLINK_EQIPINFO");
 		work = DB.SQLSelect("TBLLINK_WORKLIST");
 		
-
-		while (!pat->adoEOF)
-		{
-			patREADYN.Add(pat->Fields->GetItem("READYN")->Value);
-
-		
-			if (patREADYN.GetAt(c).Compare(compareWord)==0) {
-				patID.Add(pat->Fields->GetItem("PATID")->Value);
-				patName.Add(pat->Fields->GetItem("PATNAME")->Value);
-				patBirth.Add(pat->Fields->GetItem("BIRTH")->Value);
-				patSex.Add(pat->Fields->GetItem("PSEX")->Value);
-
-				CISDB.SQLPatientInsert(_T("T_PATIENT"), patID.GetAt(c), patName.GetAt(c), patSex.GetAt(c), patBirth.GetAt(c));
-
-				DB.SQLREADYNUpdate(_T("TBLLINK_PATIENT"), patID.GetAt(c), 2);
-			}
-			
-			pat->MoveNext();
-			c++;
-		}
-
 		while (!eqip->adoEOF) {
 
 			eqipREADYN.Add(eqip->Fields->GetItem("READYN")->Value);
 
-			if (eqipREADYN.GetAt(a).Compare(compareWord)==0) {
+			if (eqipREADYN.GetAt(a).Compare(compareWord) == 0) {
 				eqipCD.Add(eqip->Fields->GetItem("EQIPCD")->Value);
 				examCD.Add(eqip->Fields->GetItem("EXAMCD")->Value);
 				examName.Add(eqip->Fields->GetItem("EXAMNAME")->Value);
@@ -296,25 +282,69 @@ void CMFCPRACTICEDlg::OnBnClickedConnection()
 			eqip->MoveNext();
 			a++;
 		}
+		index = logList.InsertString(-1, _T("1번 완료"));
+		
+		
+		while (!pat->adoEOF)
+		{
+			patREADYN.Add(pat->Fields->GetItem("READYN")->Value);
+
+		
+			if (patREADYN.GetAt(b).Compare(compareWord)==0) {
+				patID.Add(pat->Fields->GetItem("PATID")->Value);
+				patName.Add(pat->Fields->GetItem("PATNAME")->Value);
+				patBirth.Add(pat->Fields->GetItem("BIRTH")->Value);
+				patSex.Add(pat->Fields->GetItem("PSEX")->Value);
+
+				CISDB.SQLPatientInsert(_T("T_PATIENT"), patID.GetAt(b), patName.GetAt(b), patSex.GetAt(b), patBirth.GetAt(b));
+
+				DB.SQLREADYNUpdate(_T("TBLLINK_PATIENT"), patID.GetAt(b), 2);
+			}
+			
+			pat->MoveNext();
+			b++;
+		}
+		index = logList.InsertString(-1, _T("2번 완료"));
+
+		/*
 		while (!work->adoEOF) {
 
 			workREADYN.Add(work->Fields->GetItem("READYN")->Value);
 
-			if (workREADYN.GetAt(b).Compare(compareWord)==0) {
-				ordDate.Add(work->Fields->GetItem("ORDDATE")->Value);
+			if (workREADYN.GetAt(c).Compare(compareWord)==0) {
+				getDate = work->Fields->GetItem("ORDDATE")->Value;
+
+				strYear = getDate.Left(4);
+				strMonth = getDate.Mid(4, 2);
+				strDay = getDate.Right(2);
+
+				putDate += strYear + "-" + strMonth + "-" + strDay;
+				ordDate.Add(putDate);
+				workExamCD.Add(eqip->Fields->GetItem("EXAMCD")->Value);
+				workExamTYP.Add(eqip->Fields->GetItem("EXAMTYP")->Value);
 				ordSeqNo.Add(work->Fields->GetItem("ORDSEQNO")->Value);
 				acptTime.Add(work->Fields->GetItem("ACPTTIME")->Value);
+				workPatID.Add(work->Fields->GetItem("PATID")->Value);
 
-				CISDB.SQLOrderInsert(_T("T_ORDER"), ordSeqNo.GetAt(b));
+				CISDB.SQLOrderInsert(_T("T_ORDER"), ordSeqNo.GetAt(c));
+				DB.SQLREADYNUpdate(_T("TBLLINK_WORKLIST"), ordSeqNo.GetAt(c),3);
 
-				DB.SQLREADYNUpdate(_T("TBLLINK_WORKLIST"), ordSeqNo.GetAt(b),3);
 			}
 
 			work->MoveNext();
-			b++;
+			c++;
 		}
+		*/
+		index = logList.InsertString(-1, _T("3번 완료"));
+		//index = logList.InsertString(-1, ordSeqNo.GetAt(0));
 		logList.SetCurSel(index);
 
+		for (int i = 0; i < c; i++) {
+			//index = logList.InsertString(-1, ordSeqNo.GetAt(i));
+			//CString okey = CISDB.SQLGetKey(_T("T_ORDER"), _T("O_KEY"),a);
+			//CISDB.SQLOrderHistoryInsert(_T("T_ORDERHISTORY"),okey, workExamTYP.GetAt(i), workExamCD.GetAt(i), workPatID.GetAt(i), ordDate.GetAt(i), acptTime.GetAt(i));
+		}
+		//CISDB.SQLOrderHistoryInsert();
 		/*
 		sqlCount=DB.SQLCount("TBLLINK_EQIPINFO");
 		str.Format(_T("%d"), sqlCount);
