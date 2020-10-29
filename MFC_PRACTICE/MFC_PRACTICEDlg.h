@@ -31,6 +31,32 @@ public:
 	CString m_pwd;
 	CString provider;
 
+	CStringArray patient;
+	CStringArray department;
+	CStringArray examcode;
+	CStringArray order;
+
+	CStringArray patName;
+	CStringArray patBirth;
+	CStringArray patID, workPatID;
+	CStringArray patSex;
+
+	CStringArray eqipCD;
+	CStringArray examCD, workExamCD;
+	CStringArray examName;
+	CStringArray examTYP, workExamTYP;
+	CStringArray examTYPName;
+
+	CStringArray ordDate;
+	CStringArray ordSeqNo;
+	CStringArray acptTime;
+
+	CString getDate;
+	CString putDate;
+	CString strYear;
+	CString strMonth;
+	CString strDay;
+	int index;
 
 // 구현입니다.
 protected:
@@ -49,4 +75,8 @@ public:
 	afx_msg void OnBnClickedOk();
 	afx_msg void OnLbnSelchangeLog();
 	CListBox logList;
+
+	afx_msg void OnBnClickedButton2();
+	afx_msg void OnBnClickedButton1();
+	afx_msg void OnBnClickedButton3();
 };

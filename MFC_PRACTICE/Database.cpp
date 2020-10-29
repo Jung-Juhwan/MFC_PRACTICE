@@ -380,7 +380,7 @@ _RecordsetPtr Database::SQLSelect(char* szTableName)
 	{
 		char szSQL[256];
 		memset(szSQL, 0x00, sizeof(szSQL));
-		sprintf(szSQL, "select * from %s", szTableName);
+		sprintf(szSQL, "select * from %s where READYN='N'", szTableName);
 
 		m_pRset = m_pConn->Execute(szSQL, NULL, adCmdText);
 	}
@@ -459,6 +459,9 @@ BOOL Database::SQLUpdate(char* szTableName, char* szSet, char* szWhere)
 
 BOOL Database::SQLREADYNUpdate(LPCTSTR szTableName, LPCTSTR PK, int choice)
 {
+	CString eqipCD;
+	CString examCD;
+	CString examTYP;
 	if (!m_bIsConnected)
 	{
 		printf("DB is disconnected!\n");
@@ -473,8 +476,16 @@ BOOL Database::SQLREADYNUpdate(LPCTSTR szTableName, LPCTSTR PK, int choice)
 		switch (choice)
 		{
 			case 1: //EQIPINFO 테이블
-				query += "EQIPCD = ";
-				query.Append(PK);
+				AfxExtractSubString(eqipCD, PK, 0, '/');
+				AfxExtractSubString(examCD, PK, 1, '/');
+				AfxExtractSubString(examTYP, PK, 2, '/');
+				query += "EQIPCD = '";
+				query.Append(eqipCD);
+				query += "' and EXAMCD = '";
+				query.Append(examCD);
+				query += "' and EXAMTYP = '";
+				query.Append(examTYP);
+				query+="'";
 				break;
 			case 2: //PATIENT 테이블
 				query += "PATID = ";

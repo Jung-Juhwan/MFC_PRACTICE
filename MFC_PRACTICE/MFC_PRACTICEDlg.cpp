@@ -13,7 +13,6 @@
 #define new DEBUG_NEW
 #endif
 
-
 // 응용 프로그램 정보에 사용되는 CAboutDlg 대화 상자입니다.
 
 class CAboutDlg : public CDialogEx
@@ -79,6 +78,9 @@ BEGIN_MESSAGE_MAP(CMFCPRACTICEDlg, CDialogEx)
 	ON_BN_CLICKED(IDC_CONNECTION, &CMFCPRACTICEDlg::OnBnClickedConnection)
 	ON_BN_CLICKED(IDOK, &CMFCPRACTICEDlg::OnBnClickedOk)
 	ON_LBN_SELCHANGE(IDC_LOG, &CMFCPRACTICEDlg::OnLbnSelchangeLog)
+	ON_BN_CLICKED(IDC_BUTTON2, &CMFCPRACTICEDlg::OnBnClickedButton2)
+	ON_BN_CLICKED(IDC_BUTTON1, &CMFCPRACTICEDlg::OnBnClickedButton1)
+	ON_BN_CLICKED(IDC_BUTTON3, &CMFCPRACTICEDlg::OnBnClickedButton3)
 END_MESSAGE_MAP()
 
 
@@ -217,38 +219,9 @@ void CMFCPRACTICEDlg::OnBnClickedConnection()
 	//provider = "Provider=OraOLEDB.Oracle.1;PLSQLRSet=1; Data Source=localhost\\SQLEXPRESS; Trusted_Connection=yes; Database=orcl;";
 	
 	CString strError;
-	CStringArray patient;
-	CStringArray department;
-	CStringArray examcode;
-	CStringArray order;
 
-	CStringArray patName;
-	CStringArray patBirth;
-	CStringArray patID,workPatID;
-	CStringArray patSex;
-	CStringArray patREADYN;
 
-	CStringArray eqipCD;
-	CStringArray examCD,workExamCD;
-	CStringArray examName;
-	CStringArray examTYP,workExamTYP;
-	CStringArray examTYPName;
-	CStringArray eqipREADYN;
-	
-	CStringArray ordDate;
-	CStringArray ordSeqNo;
-	CStringArray acptTime;
-	CStringArray workREADYN;
 
-	CString getDate;
-	CString putDate;
-	CString strYear;
-	CString strMonth;
-	CString strDay;
-
-	CString compareWord = _T("N");
-	int index;
-	int c=0,a=0,b=0;
 	if (!DB.Connect(m_id,m_pwd,_T("cistest"),strError)) 
 	{
 		MessageBox(_T("해당 ID와 PWD가 정확하지 않습니다"), _T("DB CONNECTION 오류"), MB_OK | MB_ICONSTOP);
@@ -258,93 +231,17 @@ void CMFCPRACTICEDlg::OnBnClickedConnection()
 	else {
 		index=logList.InsertString(-1, m_id + "/" + m_pwd);
 
-		pat = DB.SQLSelect("TBLLINK_PATIENT");
-		eqip = DB.SQLSelect("TBLLINK_EQIPINFO");
-		work = DB.SQLSelect("TBLLINK_WORKLIST");
-		
-		while (!eqip->adoEOF) {
-
-			eqipREADYN.Add(eqip->Fields->GetItem("READYN")->Value);
-
-			if (eqipREADYN.GetAt(a).Compare(compareWord) == 0) {
-				eqipCD.Add(eqip->Fields->GetItem("EQIPCD")->Value);
-				examCD.Add(eqip->Fields->GetItem("EXAMCD")->Value);
-				examName.Add(eqip->Fields->GetItem("EXAMNAME")->Value);
-				examTYP.Add(eqip->Fields->GetItem("EXAMTYP")->Value);
-				examTYPName.Add(eqip->Fields->GetItem("EXAMTYPNAME")->Value);
-
-				CISDB.SQLDepartmentInsert(_T("T_DEPARTMENT"), examTYP.GetAt(a), examTYPName.GetAt(a));
-				CISDB.SQLExamCodeInsert(_T("T_EXAMCODE"), examCD.GetAt(a), examName.GetAt(a));
-
-				DB.SQLREADYNUpdate(_T("TBLLINK_EQIPINFO"), eqipCD.GetAt(a), 1);
-			}
-
-			eqip->MoveNext();
-			a++;
-		}
-		index = logList.InsertString(-1, _T("1번 완료"));
 		
 		
-		while (!pat->adoEOF)
-		{
-			patREADYN.Add(pat->Fields->GetItem("READYN")->Value);
-
 		
-			if (patREADYN.GetAt(b).Compare(compareWord)==0) {
-				patID.Add(pat->Fields->GetItem("PATID")->Value);
-				patName.Add(pat->Fields->GetItem("PATNAME")->Value);
-				patBirth.Add(pat->Fields->GetItem("BIRTH")->Value);
-				patSex.Add(pat->Fields->GetItem("PSEX")->Value);
 
-				CISDB.SQLPatientInsert(_T("T_PATIENT"), patID.GetAt(b), patName.GetAt(b), patSex.GetAt(b), patBirth.GetAt(b));
+	
 
-				DB.SQLREADYNUpdate(_T("TBLLINK_PATIENT"), patID.GetAt(b), 2);
-			}
-			
-			pat->MoveNext();
-			b++;
-		}
-		index = logList.InsertString(-1, _T("2번 완료"));
 
-		/*
-		while (!work->adoEOF) {
-
-			workREADYN.Add(work->Fields->GetItem("READYN")->Value);
-
-			if (workREADYN.GetAt(c).Compare(compareWord)==0) {
-				getDate = work->Fields->GetItem("ORDDATE")->Value;
-
-				strYear = getDate.Left(4);
-				strMonth = getDate.Mid(4, 2);
-				strDay = getDate.Right(2);
-
-				putDate += strYear + "-" + strMonth + "-" + strDay;
-				ordDate.Add(putDate);
-				workExamCD.Add(eqip->Fields->GetItem("EXAMCD")->Value);
-				workExamTYP.Add(eqip->Fields->GetItem("EXAMTYP")->Value);
-				ordSeqNo.Add(work->Fields->GetItem("ORDSEQNO")->Value);
-				acptTime.Add(work->Fields->GetItem("ACPTTIME")->Value);
-				workPatID.Add(work->Fields->GetItem("PATID")->Value);
-
-				CISDB.SQLOrderInsert(_T("T_ORDER"), ordSeqNo.GetAt(c));
-				DB.SQLREADYNUpdate(_T("TBLLINK_WORKLIST"), ordSeqNo.GetAt(c),3);
-
-			}
-
-			work->MoveNext();
-			c++;
-		}
-		*/
-		index = logList.InsertString(-1, _T("3번 완료"));
-		//index = logList.InsertString(-1, ordSeqNo.GetAt(0));
-		logList.SetCurSel(index);
-
-		for (int i = 0; i < c; i++) {
 			//index = logList.InsertString(-1, ordSeqNo.GetAt(i));
 			//CString okey = CISDB.SQLGetKey(_T("T_ORDER"), _T("O_KEY"),a);
 			//CISDB.SQLOrderHistoryInsert(_T("T_ORDERHISTORY"),okey, workExamTYP.GetAt(i), workExamCD.GetAt(i), workPatID.GetAt(i), ordDate.GetAt(i), acptTime.GetAt(i));
-		}
-		//CISDB.SQLOrderHistoryInsert();
+
 		/*
 		sqlCount=DB.SQLCount("TBLLINK_EQIPINFO");
 		str.Format(_T("%d"), sqlCount);
@@ -370,4 +267,103 @@ void CMFCPRACTICEDlg::OnBnClickedOk()
 void CMFCPRACTICEDlg::OnLbnSelchangeLog()
 {
 	// TODO: 여기에 컨트롤 알림 처리기 코드를 추가합니다.
+}
+
+
+void CMFCPRACTICEDlg::OnBnClickedButton1()
+{
+	// TODO: 여기에 컨트롤 알림 처리기 코드를 추가합니다.
+	eqip = DB.SQLSelect("TBLLINK_EQIPINFO");
+
+
+	CString word;
+	CString compareWord = _T("N");
+	int a;
+
+	a = 0;
+	while (!eqip->adoEOF) {
+
+		eqipCD.Add(eqip->Fields->GetItem("EQIPCD")->Value);
+		examCD.Add(eqip->Fields->GetItem("EXAMCD")->Value);
+		examName.Add(eqip->Fields->GetItem("EXAMNAME")->Value);
+		examTYP.Add(eqip->Fields->GetItem("EXAMTYP")->Value);
+		examTYPName.Add(eqip->Fields->GetItem("EXAMTYPNAME")->Value);
+
+		CISDB.SQLDepartmentInsert(_T("T_DEPARTMENT"), examTYP.GetAt(a), examTYPName.GetAt(a));
+		CISDB.SQLExamCodeInsert(_T("T_EXAMCODE"), examCD.GetAt(a), examName.GetAt(a));
+
+		word += eqipCD.GetAt(a) + "/" + examCD.GetAt(a) + "/" + examTYP.GetAt(a);
+		DB.SQLREADYNUpdate(_T("TBLLINK_EQIPINFO"), word, 1);
+
+		eqip->MoveNext();
+		a++;
+	}
+	index = logList.InsertString(-1, _T("1번 완료"));
+}
+
+void CMFCPRACTICEDlg::OnBnClickedButton2()
+{
+	// TODO: 여기에 컨트롤 알림 처리기 코드를 추가합니다.
+	pat = DB.SQLSelect("TBLLINK_PATIENT");
+
+	CString word;
+	CString compareWord = _T("N");
+	
+	int b;
+
+	b = 0;
+	while (!pat->adoEOF)
+	{
+		patID.Add(pat->Fields->GetItem("PATID")->Value);
+		patName.Add(pat->Fields->GetItem("PATNAME")->Value);
+		patBirth.Add(pat->Fields->GetItem("BIRTH")->Value);
+		patSex.Add(pat->Fields->GetItem("PSEX")->Value);
+
+		CISDB.SQLPatientInsert(_T("T_PATIENT"), patID.GetAt(b), patName.GetAt(b), patSex.GetAt(b), patBirth.GetAt(b));
+
+		DB.SQLREADYNUpdate(_T("TBLLINK_PATIENT"), patID.GetAt(b), 2);
+
+		pat->MoveNext();
+		b++;
+	}
+	index = logList.InsertString(-1, _T("2번 완료"));
+}
+
+void CMFCPRACTICEDlg::OnBnClickedButton3()
+{
+	// TODO: 여기에 컨트롤 알림 처리기 코드를 추가합니다.
+
+	work = DB.SQLSelect("TBLLINK_WORKLIST");
+
+	CString word;
+	CString compareWord = _T("N");
+	int c;
+
+	c = 0;
+	while (!work->adoEOF) {
+
+		getDate = work->Fields->GetItem("ORDDATE")->Value;
+
+		strYear = getDate.Left(4);
+		strMonth = getDate.Mid(4, 2);
+		strDay = getDate.Right(2);
+
+		putDate += strYear + "-" + strMonth + "-" + strDay;
+		ordDate.Add(putDate);
+		workExamCD.Add(eqip->Fields->GetItem("EXAMCD")->Value);
+		workExamTYP.Add(eqip->Fields->GetItem("EXAMTYP")->Value);
+		ordSeqNo.Add(work->Fields->GetItem("ORDSEQNO")->Value);
+		acptTime.Add(work->Fields->GetItem("ACPTTIME")->Value);
+		workPatID.Add(work->Fields->GetItem("PATID")->Value);
+
+		CISDB.SQLOrderInsert(_T("T_ORDER"), ordSeqNo.GetAt(c));
+		DB.SQLREADYNUpdate(_T("TBLLINK_WORKLIST"), ordSeqNo.GetAt(c), 3);
+
+		work->MoveNext();
+		c++;
+	}
+
+	index = logList.InsertString(-1, _T("3번 완료"));
+
+	logList.SetCurSel(index);
 }
