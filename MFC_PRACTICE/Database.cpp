@@ -413,9 +413,7 @@ CString Database::SQLGetKey(LPCTSTR szTableName, LPCTSTR value, LPCTSTR szAccess
 		//Execute the insert statement
 		m_pRset = m_pConn->Execute(_bstr_t(query), NULL, adCmdText);
 
-		while (!m_pRset->adoEOF) {
-			result = m_pRset->Fields->GetItem(value)->Value;
-		}
+		result = m_pRset->Fields->GetItem(value)->Value;
 	}
 	catch (...)
 	{

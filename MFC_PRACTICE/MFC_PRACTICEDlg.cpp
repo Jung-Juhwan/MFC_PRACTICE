@@ -81,6 +81,7 @@ BEGIN_MESSAGE_MAP(CMFCPRACTICEDlg, CDialogEx)
 	ON_BN_CLICKED(IDC_BUTTON2, &CMFCPRACTICEDlg::OnBnClickedButton2)
 	ON_BN_CLICKED(IDC_BUTTON1, &CMFCPRACTICEDlg::OnBnClickedButton1)
 	ON_BN_CLICKED(IDC_BUTTON3, &CMFCPRACTICEDlg::OnBnClickedButton3)
+	ON_BN_CLICKED(IDC_BUTTON4, &CMFCPRACTICEDlg::OnBnClickedButton4)
 END_MESSAGE_MAP()
 
 
@@ -231,22 +232,6 @@ void CMFCPRACTICEDlg::OnBnClickedConnection()
 	else {
 		index=logList.InsertString(-1, m_id + "/" + m_pwd);
 
-		
-		
-		
-
-	
-
-
-			//index = logList.InsertString(-1, ordSeqNo.GetAt(i));
-			//CString okey = CISDB.SQLGetKey(_T("T_ORDER"), _T("O_KEY"),a);
-			//CISDB.SQLOrderHistoryInsert(_T("T_ORDERHISTORY"),okey, workExamTYP.GetAt(i), workExamCD.GetAt(i), workPatID.GetAt(i), ordDate.GetAt(i), acptTime.GetAt(i));
-
-		/*
-		sqlCount=DB.SQLCount("TBLLINK_EQIPINFO");
-		str.Format(_T("%d"), sqlCount);
-		SetDlgItemText(IDC_LOG, str);
-		*/
 
 		//CISDB.SQLInsert((LPSTR)(LPCTSTR)("T_ORDER"), (LPSTR)(LPCTSTR)("1,'aaa'"));
 	
@@ -277,12 +262,12 @@ void CMFCPRACTICEDlg::OnBnClickedButton1()
 
 
 	CString word;
-	CString compareWord = _T("N");
 	int a;
 
 	a = 0;
 	while (!eqip->adoEOF) {
-
+		word = _T("");
+		
 		eqipCD.Add(eqip->Fields->GetItem("EQIPCD")->Value);
 		examCD.Add(eqip->Fields->GetItem("EXAMCD")->Value);
 		examName.Add(eqip->Fields->GetItem("EXAMNAME")->Value);
@@ -299,6 +284,8 @@ void CMFCPRACTICEDlg::OnBnClickedButton1()
 		a++;
 	}
 	index = logList.InsertString(-1, _T("1번 완료"));
+
+	logList.SetCurSel(index);
 }
 
 void CMFCPRACTICEDlg::OnBnClickedButton2()
@@ -307,7 +294,6 @@ void CMFCPRACTICEDlg::OnBnClickedButton2()
 	pat = DB.SQLSelect("TBLLINK_PATIENT");
 
 	CString word;
-	CString compareWord = _T("N");
 	
 	int b;
 
@@ -327,6 +313,8 @@ void CMFCPRACTICEDlg::OnBnClickedButton2()
 		b++;
 	}
 	index = logList.InsertString(-1, _T("2번 완료"));
+
+	logList.SetCurSel(index);
 }
 
 void CMFCPRACTICEDlg::OnBnClickedButton3()
@@ -336,7 +324,6 @@ void CMFCPRACTICEDlg::OnBnClickedButton3()
 	work = DB.SQLSelect("TBLLINK_WORKLIST");
 
 	CString word;
-	CString compareWord = _T("N");
 	int c;
 
 	c = 0;
@@ -350,8 +337,8 @@ void CMFCPRACTICEDlg::OnBnClickedButton3()
 
 		putDate += strYear + "-" + strMonth + "-" + strDay;
 		ordDate.Add(putDate);
-		workExamCD.Add(eqip->Fields->GetItem("EXAMCD")->Value);
-		workExamTYP.Add(eqip->Fields->GetItem("EXAMTYP")->Value);
+		workExamCD.Add(work->Fields->GetItem("EXAMCD")->Value);
+		workExamTYP.Add(work->Fields->GetItem("EXAMTYP")->Value);
 		ordSeqNo.Add(work->Fields->GetItem("ORDSEQNO")->Value);
 		acptTime.Add(work->Fields->GetItem("ACPTTIME")->Value);
 		workPatID.Add(work->Fields->GetItem("PATID")->Value);
@@ -366,4 +353,18 @@ void CMFCPRACTICEDlg::OnBnClickedButton3()
 	index = logList.InsertString(-1, _T("3번 완료"));
 
 	logList.SetCurSel(index);
+}
+
+
+void CMFCPRACTICEDlg::OnBnClickedButton4()
+{
+	// TODO: 여기에 컨트롤 알림 처리기 코드를 추가합니다.
+
+		
+	int sqlCount=DB.SQLCount("TBLLINK_WORKLIST");
+	for (int i = 0; i < sqlCount; i++) {
+		CString a = CISDB.SQLGetKey(_T("T_ORDER"), _T("O_KEY"), ordSeqNo.GetAt(i));
+		CISDB.SQLOrderHistoryInsert(_T("T_ORDERHISTORY"), a, (LPCTSTR)workExamTYP.GetAt(i), (LPCTSTR)workExamCD.GetAt(i), (LPCTSTR)workPatID.GetAt(i), (LPCTSTR)ordDate.GetAt(i), (LPCTSTR)acptTime.GetAt(i));
+	}
+		
 }
