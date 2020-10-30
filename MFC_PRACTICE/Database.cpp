@@ -400,6 +400,36 @@ CString Database::SQLGetKey(LPCTSTR szTableName, LPCTSTR value, LPCTSTR szAccess
 	return result;
 }
 
+CString Database::SQLGetKey2(LPCTSTR szTableName, LPCTSTR OH_OKEY)
+{
+	CString result;
+
+	if (!m_bIsConnected)
+	{
+		printf("DB is disconnected!\n");
+		return 0;
+	}
+	try
+	{
+		CString query = _T("Select OH_KEY from ");
+		query.Append(szTableName);
+		query += " where OH_OKEY='";
+		query.Append(OH_OKEY);
+		query += "' and TO_CHAR(OH_ENDDT,'YYYYMMDDHH24MISS') like '99991231235959'";
+
+		//Execute the insert statement
+		m_pRset = m_pConn->Execute(_bstr_t(query), NULL, adCmdText);
+
+		result = m_pRset->Fields->GetItem("OH_KEY")->Value;
+	}
+	catch (...)
+	{
+		return NULL;
+	}
+
+	return result;
+}
+
 ////////////////////////////////////////////////////////////////////////////////////
 //Update 하는방법
 //UPDATE szTableName set szSet where szWhere 의 형태로 사용
@@ -407,7 +437,7 @@ CString Database::SQLGetKey(LPCTSTR szTableName, LPCTSTR value, LPCTSTR szAccess
 //    SQLUpdate("dbo.Test", "szString='stupid'", "nNum=2"); 처럼 사용하면 됩니다.
 //
 //데이터가 올바르게 저장되면 TRUE 리턴, 실패시 FALSE 리턴
-BOOL Database::SQLUpdate(char* szTableName, char* szSet, char* szWhere)
+BOOL Database::SQLUpdate(LPCTSTR szTableName, LPCTSTR date, LPCTSTR OH_KEY)
 {
 	if (!m_bIsConnected)
 	{
@@ -417,12 +447,15 @@ BOOL Database::SQLUpdate(char* szTableName, char* szSet, char* szWhere)
 
 	try
 	{
-		char szSQL[256];
-		memset(szSQL, 0x00, sizeof(szSQL));
-		sprintf(szSQL, "UPDATE %s set %s where %s", szTableName, szSet, szWhere);
-
+		CString query = _T("Update ");
+		query.Append(szTableName);
+		query += " set OH_ENDDT=TO_DATE('";
+		query.Append(date);
+		query += "','YYYYMMDDHH24MISS') where OH_KEY=";
+		query.Append(OH_KEY);
+		query += "";
 		//		m_pConn->BeginTrans();
-		m_pConn->Execute(szSQL, NULL, adExecuteNoRecords);
+		m_pConn->Execute(_bstr_t(query), NULL, adExecuteNoRecords);
 		//		m_pConn->CommitTrans();
 	}
 	catch (...)

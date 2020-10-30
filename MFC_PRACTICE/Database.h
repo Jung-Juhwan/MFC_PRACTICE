@@ -9,10 +9,11 @@ class Database
 public:
 	void* SQLExcute(char *szSQL);
 	BOOL SQLDelete(char *szTableName, char *szWhere);
-	BOOL SQLUpdate(char* szTableName, char* szSet, char* szWhere);
+	BOOL SQLUpdate(LPCTSTR szTableName, LPCTSTR date, LPCTSTR OH_KEY);
 	BOOL SQLREADYNUpdate(LPCTSTR szTableName, LPCTSTR PK, int choice);
 	_RecordsetPtr SQLSelect(char* szTableName);
 	CString SQLGetKey(LPCTSTR szTableName, LPCTSTR value, LPCTSTR szAccessNo);
+	CString SQLGetKey2(LPCTSTR szTableName, LPCTSTR OH_OKEY);
 	BOOL SQLInsert(char* szTableName, char* szValues);
 	BOOL SQLPatientInsert(LPCTSTR szTableName, LPCTSTR szID, LPCTSTR szName, LPCTSTR szSex, LPCTSTR szBirth);
 	BOOL SQLOrderInsert(LPCTSTR szTableName, LPCTSTR szAccessNo);

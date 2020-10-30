@@ -346,6 +346,7 @@ void CMFCPRACTICEDlg::OnBnClickedButton3()
 		CISDB.SQLOrderInsert(_T("T_ORDER"), ordSeqNo.GetAt(c));
 		DB.SQLREADYNUpdate(_T("TBLLINK_WORKLIST"), ordSeqNo.GetAt(c), 3);
 
+		putDate = _T("");
 		work->MoveNext();
 		c++;
 	}
@@ -373,22 +374,41 @@ void CMFCPRACTICEDlg::OnBnClickedButton4()
 		// Failed to convert the current time 
 		return;
 	}
-	CString timeDate;
+	CString timeDate,timeDate2;
 	CString year;
 	year.Format(_T("%d"), pLocal->tm_year + 1900);
 	CString mon;
 	mon.Format(_T("%d"), pLocal->tm_mon + 1);
 	CString day;
 	day.Format(_T("%d"), pLocal->tm_mday);
-
+	CString hour;
+	hour.Format(_T("%d"), pLocal->tm_hour);
+	CString minute;
+	minute.Format(_T("%d"), pLocal->tm_min);
+	CString second;
+	second.Format(_T("%d"), pLocal->tm_sec);
 	timeDate += year + "-" + mon + "-" + day;
+	timeDate2 += year + mon + day + hour + minute + second;
 
-	CString a;
-		
+	CString a,b; // a는 SEQNO로 받은 T_ORDER테이블의 O_KEY b는 T_ORDERHISTORY테이블의 OH_OKEY로 받은 OH_KEY
+	int count;
 	int sqlCount=DB.SQLCount("TBLLINK_WORKLIST");
-	for (int i = 0; i < sqlCount; i++) {
-		a = CISDB.SQLGetKey(_T("T_ORDER"), _T("O_KEY"), ordSeqNo.GetAt(i));
-		CISDB.SQLOrderHistoryInsert(_T("T_ORDERHISTORY"),timeDate, a, (LPCTSTR)workExamTYP.GetAt(i), (LPCTSTR)workExamCD.GetAt(i), (LPCTSTR)workPatID.GetAt(i), (LPCTSTR)ordDate.GetAt(i), (LPCTSTR)acptTime.GetAt(i));
+	for (count = 0; count < sqlCount; count++) {
+		a = CISDB.SQLGetKey(_T("T_ORDER"), _T("O_KEY"), ordSeqNo.GetAt(count));
+		b = CISDB.SQLGetKey2(_T("T_ORDERHISTORY"), a);
+		if (b.Compare(_T(""))==0) { //수정된 데이터가 없다면
+			CISDB.SQLOrderHistoryInsert(_T("T_ORDERHISTORY"), timeDate, a, (LPCTSTR)workExamTYP.GetAt(count), (LPCTSTR)workExamCD.GetAt(count), (LPCTSTR)workPatID.GetAt(count), (LPCTSTR)ordDate.GetAt(count), (LPCTSTR)acptTime.GetAt(count));
+		}
+		else {
+			CISDB.SQLUpdate(_T("T_ORDERHISTORY"), timeDate2, b);
+			CISDB.SQLOrderHistoryInsert(_T("T_ORDERHISTORY"), timeDate, a, (LPCTSTR)workExamTYP.GetAt(count), (LPCTSTR)workExamCD.GetAt(count), (LPCTSTR)workPatID.GetAt(count), (LPCTSTR)ordDate.GetAt(count), (LPCTSTR)acptTime.GetAt(count));
+		}
 	}
-		
+	
+	index = logList.InsertString(-1, _T("4번 완료"));
+
+	logList.SetCurSel(index);
+
+	timeDate = _T("");
+	timeDate2 = _T("");
 }
