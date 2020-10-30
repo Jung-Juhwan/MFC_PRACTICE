@@ -7,7 +7,7 @@
 #include "MFC_PRACTICE.h"
 #include "MFC_PRACTICEDlg.h"
 #include "afxdialogex.h"
-
+#include <time.h>
 
 #ifdef _DEBUG
 #define new DEBUG_NEW
@@ -360,11 +360,35 @@ void CMFCPRACTICEDlg::OnBnClickedButton4()
 {
 	// TODO: 여기에 컨트롤 알림 처리기 코드를 추가합니다.
 
+	time_t curTime = time(NULL);
+	struct tm* pLocal = NULL;
+
+#if defined(_WIN32) || defined(_WIN64) 
+	pLocal = localtime(&curTime);
+#else 
+	localtime_r(&curTime, pLocal);
+#endif 
+	if (pLocal == NULL)
+	{
+		// Failed to convert the current time 
+		return;
+	}
+	CString timeDate;
+	CString year;
+	year.Format(_T("%d"), pLocal->tm_year + 1900);
+	CString mon;
+	mon.Format(_T("%d"), pLocal->tm_mon + 1);
+	CString day;
+	day.Format(_T("%d"), pLocal->tm_mday);
+
+	timeDate += year + "-" + mon + "-" + day;
+
+	CString a;
 		
 	int sqlCount=DB.SQLCount("TBLLINK_WORKLIST");
 	for (int i = 0; i < sqlCount; i++) {
-		CString a = CISDB.SQLGetKey(_T("T_ORDER"), _T("O_KEY"), ordSeqNo.GetAt(i));
-		CISDB.SQLOrderHistoryInsert(_T("T_ORDERHISTORY"), a, (LPCTSTR)workExamTYP.GetAt(i), (LPCTSTR)workExamCD.GetAt(i), (LPCTSTR)workPatID.GetAt(i), (LPCTSTR)ordDate.GetAt(i), (LPCTSTR)acptTime.GetAt(i));
+		a = CISDB.SQLGetKey(_T("T_ORDER"), _T("O_KEY"), ordSeqNo.GetAt(i));
+		CISDB.SQLOrderHistoryInsert(_T("T_ORDERHISTORY"),timeDate, a, (LPCTSTR)workExamTYP.GetAt(i), (LPCTSTR)workExamCD.GetAt(i), (LPCTSTR)workPatID.GetAt(i), (LPCTSTR)ordDate.GetAt(i), (LPCTSTR)acptTime.GetAt(i));
 	}
 		
 }

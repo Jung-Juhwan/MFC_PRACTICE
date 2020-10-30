@@ -18,7 +18,7 @@ public:
 	BOOL SQLOrderInsert(LPCTSTR szTableName, LPCTSTR szAccessNo);
 	BOOL SQLDepartmentInsert(LPCTSTR szTableName, LPCTSTR szDepartCode, LPCTSTR szName);
 	BOOL SQLExamCodeInsert(LPCTSTR szTableName, LPCTSTR szExamCode, LPCTSTR szDescription);
-	BOOL SQLOrderHistoryInsert(LPCTSTR szTableName, LPCTSTR okey, LPCTSTR deptcode, LPCTSTR examcode, LPCTSTR patid, LPCTSTR publish, LPCTSTR registration);
+	BOOL SQLOrderHistoryInsert(LPCTSTR szTableName, LPCTSTR timeDate, LPCTSTR okey, LPCTSTR deptcode, LPCTSTR examcode, LPCTSTR patid, LPCTSTR publish, LPCTSTR registration);
 	BOOL DisConnect();
 	BOOL Connect(LPCTSTR lpszUserName, LPCTSTR lpszPassword, LPCTSTR lpszServiceName, CString& strError);
 	int SQLCount(char* szTableName);

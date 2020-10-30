@@ -1,6 +1,6 @@
 #include "pch.h"
 #include "Database.h"
-#include <time.h>
+
 
 
 Database::Database()
@@ -279,38 +279,15 @@ BOOL Database::SQLExamCodeInsert(LPCTSTR szTableName, LPCTSTR szExamCode, LPCTST
 	return TRUE;
 }
 
-BOOL Database::SQLOrderHistoryInsert(LPCTSTR szTableName,  LPCTSTR okey, LPCTSTR deptcode, LPCTSTR examcode, LPCTSTR patid, LPCTSTR publish, LPCTSTR registration)
+BOOL Database::SQLOrderHistoryInsert(LPCTSTR szTableName, LPCTSTR timeDate, LPCTSTR okey, LPCTSTR deptcode, LPCTSTR examcode, LPCTSTR patid, LPCTSTR publish, LPCTSTR registration)
 {
-	time_t curTime = time(NULL);
-	struct tm* pLocal = NULL;
 
-#if defined(_WIN32) || defined(_WIN64) 
-	pLocal = localtime(&curTime);
-#else 
-	localtime_r(&curTime, pLocal);
-#endif 
-
-	CString timeDate;
 	if (!m_bIsConnected)
 	{
 		printf("DB is disconnected!\n");
 		return FALSE;
 	}
 
-	if(pLocal == NULL)
-	{
-		// Failed to convert the current time 
-		return false;
-	}
-
-	CString year;
-	year.Format(_T("%d"), pLocal->tm_year + 1900);
-	CString mon;
-	mon.Format(_T("%d"), pLocal->tm_mon + 1);
-	CString day;
-	day.Format(_T("%d"), pLocal->tm_mday);
-
-	timeDate += year + "-" + mon + "-" + day;
 
 	try
 	{
